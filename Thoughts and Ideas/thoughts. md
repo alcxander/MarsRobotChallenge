@@ -41,3 +41,11 @@ back of fstrategies, put in a 1 check sum at the start of every maneuver. also a
 terrain seeding strategies
 json linter for examples provided, need to extend them to include session IDs,
 unit tests - code rabbit for this. Need something to know the cli works
+
+
+----------------------
+
+
+building in cli should i try something like build an application from scratch dependency by dependency or should i 
+build a web application like normal and extend it out to accommodate cli......hmmmmmm
+
