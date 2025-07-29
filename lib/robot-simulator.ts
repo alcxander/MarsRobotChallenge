@@ -53,6 +53,9 @@ export class MarsRobot {
     this.terrain = input.terrain
     this.visitedCells = [{ ...this.position }]
     this.samplesCollected = []
+
+    //no longer does anything, misunderstood an instruction
+    this.collectSampleAtCurrentPosition(); 
   }
 
   private getDirectionVector(direction: Direction): Position {
@@ -80,6 +83,7 @@ export class MarsRobot {
     this.facing = directions[(currentIndex + 1) % 4]
   }
 
+  //TODO: check if pairing this as two is better than pairing it as all 4
   private isValidPosition(pos: Position): boolean {
     return (
       pos.x >= 0 &&
@@ -237,10 +241,28 @@ export class MarsRobot {
         return 0
     }
   }
+
+  //I feel like we are not collecting samples correctly, let's put in get sample at currentLocation 
+  // for first iteration of the engine as it's not being picked up
+
+  private collectSampleAtCurrentPosition(): void {
+    // const currentTerrain = this.terrain[this.position.y][this.position.x]
+    // if (currentTerrain !== "Obs") //which shouldn't happen because we have a filter to stop us from starting on Obs territory
+    // {
+    //   this.samplesCollected.push(currentTerrain)
+    // }
+    //this.executeCommand("S")
+
+
+    // we don't need this, I'm leaving this in to show what was done but if the command 'S' is not given then the bot won't varvest
+    // for some reason I had thought it must harvest on the first go. but really the count of harvested materials should
+    // match the number of S's in the input
+
+  }
 }
 
 export function simulateRobot(input: RobotInput): RobotOutput {
-  // Validate input
+  // Validate input and keep application clean from bad inputs, will but other considerations here after testing
   if (!input.terrain || !Array.isArray(input.terrain) || input.terrain.length === 0) {
     throw new Error("Invalid terrain: must be a non-empty 2D array")
   }
@@ -254,7 +276,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   }
 
   if (!Array.isArray(input.commands)) {
-    throw new Error("Invalid commands: must be an array")
+    throw new Error("Invalid commands input: must be an array")
   }
 
   const validCommands = ["F", "B", "L", "R", "S", "E"]
@@ -263,7 +285,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   }
 
   if (!input.initialPosition || !input.initialPosition.location) {
-    throw new Error("Invalid initial position")
+    throw new Error("Invalid or empty initial position supplied")
   }
 
   const { x, y } = input.initialPosition.location
