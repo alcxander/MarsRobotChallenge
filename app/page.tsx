@@ -91,6 +91,7 @@ export default function MarsRobotSimulator() {
               const isVisited = visitedCells.some((pos) => pos.x === x && pos.y === y)
               const isFinal = finalPosition.x === x && finalPosition.y === y
               //TODO: finalposition not getting logged here correctly, they're NaN, also this renders twice.
+              //durr this is dev and strict mode is on. 
               //console.log(x +":"+y)
               return (
                 <div
@@ -114,6 +115,19 @@ export default function MarsRobotSimulator() {
       </div>
     )
   }
+
+
+  //not a fan of how final position is being displayed currently so going to refactor that to present something nicer 
+  // and then will backtrack to find root cause of NaN
+  const finalPosition = () => {
+
+    const finalPosition = output?.FinalPosition?.Location
+    if (!finalPosition || typeof finalPosition.x !== 'number' || typeof finalPosition.y !== 'number'){
+      return <p className="text-gray-800">Unable to render final co-ordinates</p>
+    }
+    return null;
+    
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
@@ -164,7 +178,12 @@ export default function MarsRobotSimulator() {
                   <div>
                     <h4 className="font-semibold mb-2">Final Position</h4>
                     <p className="text-sm">
-                      ({output.FinalPosition.Location.x}, {output.FinalPosition.Location.y}) facing{" "}
+                      {typeof output.FinalPosition?.Location?.x === 'number' && typeof output.FinalPosition.Location.y === 'number'
+                       ?`({output.FinalPosition.Location.x}, {output.FinalPosition.Location.y})`
+                       : 'unable to display final co-ordinates'}                     
+                       <strong>
+                        facing{" "}
+                       </strong>
                       {output.FinalPosition.Facing}
                     </p>
                   </div>
