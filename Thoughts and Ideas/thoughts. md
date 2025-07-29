@@ -94,5 +94,7 @@ this result seems to work so the refuel seems to be working.
 
 in simulation cases add section that says if battery is ever 0 while doing an action then break and produce error to show user
 
+#question currently when a sample is collected should we remove that from the terrain so it can't be picked up a second time?
+
 
 

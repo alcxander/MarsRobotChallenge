@@ -52,6 +52,8 @@ export default function MarsRobotSimulator() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const [commandInputCount, setcommandInputCount] = useState<number>(0);
+  
   const handleSimulate = async () => {
     setLoading(true)
     setError(null)
@@ -59,6 +61,10 @@ export default function MarsRobotSimulator() {
 
     try {
       const parsedInput: RobotInput = JSON.parse(input)
+      const count = parsedInput.commands.filter(
+        cmd => cmd === 'S'
+      ).length;
+      setcommandInputCount(count);
 
       const response = await fetch("/api/simulate", {
         method: "POST",
@@ -116,17 +122,14 @@ export default function MarsRobotSimulator() {
     )
   }
 
-
   //not a fan of how final position is being displayed currently so going to refactor that to present something nicer 
   // and then will backtrack to find root cause of NaN
   // const finalPosition = () => {
-
   //   const finalPosition = output?.FinalPosition?.Location
   //   if (!finalPosition || typeof finalPosition.x !== 'number' || typeof finalPosition.y !== 'number'){
   //     return <p className="text-gray-800">Unable to render final co-ordinates</p>
   //   }
   //   return null;
-    
   // };
   // ended up not using this, this was silly approach just do it in line
 
@@ -191,19 +194,30 @@ export default function MarsRobotSimulator() {
                 </div>
 
                 <Separator />
-
-                <div>
-                  <h4 className="font-semibold mb-2">Samples Collected</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {output.SamplesCollected.length > 0 ? (
-                      output.SamplesCollected.map((sample, index) => (
-                        <Badge key={index} variant="secondary">
-                          {sample}
-                        </Badge>
-                      ))
-                    ) : (
-                      <p className="text-gray-500 text-sm">No samples collected</p>
-                    )}
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                    <h4 className="font-semibold mb-2">Samples Collected</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {output.SamplesCollected.length > 0 ? (
+                        output.SamplesCollected.map((sample, index) => (
+                          <Badge key={index} variant="secondary">
+                            {sample}
+                          </Badge>
+                        ))
+                      ) : (
+                        <p className="text-gray-500 text-sm">No samples collected</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Count of Samples Target Number {commandInputCount}</h4>
+                    <div className="flex flex-wrap gap-2">
+                      { commandInputCount === output.SamplesCollected.length 
+                      ? (<p className="text-green-600 text-sm">Samples collected match</p>)
+                       : (
+                        <p className="text-red-500 text-sm">Samples collected mismatch</p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
