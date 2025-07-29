@@ -92,5 +92,7 @@ this result seems to work so the refuel seems to be working.
 #observation we don't track when and what evasive procedures are invoked which makes tracking battery usage impossible, may add this just to make my own life easier for testing results
 
 
+in simulation cases add section that says if battery is ever 0 while doing an action then break and produce error to show user
+
 
 
