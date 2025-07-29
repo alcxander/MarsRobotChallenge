@@ -89,5 +89,8 @@ this result seems to work so the refuel seems to be working.
 
 #observation, alot of 'does this do what I think it does' is happening on project creation. It's like importing a complex component and now testing to see if it works as intended. Is this actually better than building it out? Maybe. :)
 
+#observation we don't track when and what evasive procedures are invoked which makes tracking battery usage impossible, may add this just to make my own life easier for testing results
+
+
 
 
