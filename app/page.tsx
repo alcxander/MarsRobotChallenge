@@ -119,15 +119,16 @@ export default function MarsRobotSimulator() {
 
   //not a fan of how final position is being displayed currently so going to refactor that to present something nicer 
   // and then will backtrack to find root cause of NaN
-  const finalPosition = () => {
+  // const finalPosition = () => {
 
-    const finalPosition = output?.FinalPosition?.Location
-    if (!finalPosition || typeof finalPosition.x !== 'number' || typeof finalPosition.y !== 'number'){
-      return <p className="text-gray-800">Unable to render final co-ordinates</p>
-    }
-    return null;
+  //   const finalPosition = output?.FinalPosition?.Location
+  //   if (!finalPosition || typeof finalPosition.x !== 'number' || typeof finalPosition.y !== 'number'){
+  //     return <p className="text-gray-800">Unable to render final co-ordinates</p>
+  //   }
+  //   return null;
     
-  };
+  // };
+  // ended up not using this, this was silly approach just do it in line
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
@@ -179,10 +180,10 @@ export default function MarsRobotSimulator() {
                     <h4 className="font-semibold mb-2">Final Position</h4>
                     <p className="text-sm">
                       {typeof output.FinalPosition?.Location?.x === 'number' && typeof output.FinalPosition.Location.y === 'number'
-                       ?`({output.FinalPosition.Location.x}, {output.FinalPosition.Location.y})`
+                       ?`(${output.FinalPosition.Location.x}, ${output.FinalPosition.Location.y})`
                        : 'unable to display final co-ordinates'}                     
                        <strong>
-                        facing{" "}
+                        {" "}facing{" "}
                        </strong>
                       {output.FinalPosition.Facing}
                     </p>
@@ -247,7 +248,7 @@ export default function MarsRobotSimulator() {
           <CardTitle>Command Reference</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <h4 className="font-semibold mb-2">Robot Commands</h4>
               <ul className="space-y-1 text-sm">
@@ -291,6 +292,32 @@ export default function MarsRobotSimulator() {
                 </li>
                 <li>
                   <strong>Obs</strong> - Obstacle (impassable)
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Backouts on Obstacles</h4>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  <strong>E R F</strong> - 1 
+                </li>
+                <li>
+                  <strong>E L F</strong> - 2
+                </li>
+                <li>
+                  <strong>E L L F</strong> - 3 this works but ideally L L F could be replaced with 'B' for battery save of 4 units
+                </li>
+                <li>
+                  <strong>E B R F</strong> - 4
+                </li>
+                <li>
+                  <strong>E B B L F</strong> - 5
+                </li>
+                <li>
+                  <strong>E F F</strong> - 6 this does not work but has been kept in from exercise example. recharge, forwards twice does get around an obstacle which is only known once you end a step facing it.
+                </li>
+                <li>
+                  <strong>E F L F L F</strong> - 7 - this works but only when you get to the second step of the sequence otherwise it's forcing the engine to figure out another obstacle choice
                 </li>
               </ul>
             </div>

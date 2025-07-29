@@ -211,11 +211,11 @@ export class MarsRobot {
     }
 
     return {
-      VisitedCells: this.visitedCells.map((cell) => ({ X: cell.x, Y: cell.y })),
+      VisitedCells: this.visitedCells.map((cell) => ({ x: cell.x, y: cell.y })),
       SamplesCollected: [...this.samplesCollected],
       Battery: this.battery,
       FinalPosition: {
-        Location: { X: this.position.x, Y: this.position.y },
+        Location: { x: this.position.x, y: this.position.y },
         Facing: this.facing,
       },
     }
