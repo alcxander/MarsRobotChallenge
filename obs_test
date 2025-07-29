@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Mars Robot Challenge - Main Execution Script
+# Usage:
+#   ./obs_test input.json output.json  - CLI mode
+#   ./obs_test                         - Start REST API server
+#   ./obs_test_post input.json         - REST client mode
+
+if [ $# -eq 0 ]; then
+    echo "Starting Mars Robot API Server..."
+    echo "Server will be available at http://localhost:3000"
+    echo "API endpoint: POST http://localhost:3000/api/simulate"
+    echo ""
+    echo "Press Ctrl+C to stop the server"
+    npm run dev
+elif [ $# -eq 2 ]; then
+    echo "Running Mars Robot Simulation (CLI Mode)"
+    echo "Input: $1"
+    echo "Output: $2"
+    echo ""
+    node scripts/cli-processor.js "$1" "$2"
+else
+    echo "Usage:"
+    echo "  $0 input.json output.json  - CLI mode processing files"
+    echo "  $0                         - Start REST API server"
+    echo ""
+    echo "For REST client mode, use: ./obs_test_post input.json"
+    exit 1
+fi

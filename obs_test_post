@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Mars Robot Challenge - REST API Client
+# Usage: ./obs_test_post input.json
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 input.json"
+    echo "Make sure the API server is running with: ./obs_test"
+    exit 1
+fi
+
+echo "Mars Robot Challenge - REST API Client"
+echo "Connecting to API server at http://localhost:3000"
+echo ""
+
+node scripts/api-client.js "$1"

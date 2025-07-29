@@ -49,3 +49,45 @@ unit tests - code rabbit for this. Need something to know the cli works
 building in cli should i try something like build an application from scratch dependency by dependency or should i 
 build a web application like normal and extend it out to accommodate cli......hmmmmmm
 
+----------------------
+
+29th 07 2025
+
+getting a skeleton from an AI tool has made the start of this both easy and tough. Need to dig through and check the typing
+across the project
+
+on installation and first run note the install section has some weird dependencies, the system setup has picked some  dependencies that when cross checked aren't supported, will need to check and pull apart the dependencies and see what won't work.
+
+need to install get functing and had to use --legacy-peer-deps #issue to get the system started, might try use some linter 
+to see if I can pull apart these dependencies.
+
+
+# testing initial skeleton
+
+#question what does battery do on input? is that supposed to limit the battery intake that can be used per run?
+
+#question At every moment, the robot contains an internal battery which provides a certain capacity, what is that capacity? going to assume infinite while starting out
+
+#result the site runs, what do we note. input seems correct, output does not seem correct. we have visited cells, we have samples collected, final position, battery, direction facing. This partially presents correctly on the UI, the visited cells don't show numbers but map correctly. 
+
+Looks like we stop at the boundary
+
+{
+  "terrain": [["Fe", "Se", "Si"], ["W", "Zn", "Fe"]],
+  "battery": 10,
+  "commands": ["F", "S", "R", "F"],
+  "initialPosition": {
+    "location": {"x": 0, "y": 0},
+    "facing": "East"
+  }
+}
+
+this use case should trigger the robot to want to refuel and should end up at 3 units. expected interaction:
+10 units - move 7 - fail sample refuel (question here again about max, max can't be 10 as input shows 50 in test data) -refuel by 10 to 16 (-1 cost on action) - minus 8 for sample to 8 - minus 2 for turn right - minus 3 for forward to get to 3.
+
+this result seems to work so the refuel seems to be working. 
+
+#observation, alot of 'does this do what I think it does' is happening on project creation. It's like importing a complex component and now testing to see if it works as intended. Is this actually better than building it out? Maybe. :)
+
+
+
