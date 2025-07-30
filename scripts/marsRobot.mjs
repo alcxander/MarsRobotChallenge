@@ -9,14 +9,14 @@ import { MarsRobot, simulateRobot } from "../lib/robot-simulator.js";
 
 async function main() { 
     // break out args
-    console.log("1")
+
     const args = process.argv.slice(2)
     if (args.length !== 2){
         // may change this in future to be a typed version of params,right now it's only accepting input + output
         console.error("Usage: marsRobotCli.js <input.json> <output.json>");
         process.exit(1);
     };
-console.log("2")
+
     // process input data in arg
     const [inputPath, outputPath] = args
     
@@ -24,8 +24,6 @@ console.log("2")
         const inputJson = await fs.readFile(inputPath, "utf8")
         // doule check encoding being enforced is better than no encoding
         const input = JSON.parse(inputJson);
-
-        console.log("3")
 
         // send to simulateRobot function
         const output = simulateRobot(input);

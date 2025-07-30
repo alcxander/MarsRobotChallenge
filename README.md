@@ -104,3 +104,26 @@ terrain seeding strategies
 json linter for examples provided, need to extend them to include session IDs,
 unit tests - code rabbit for this. Need something to know the cli works
 
+
+
+CLI works after publishing and installing the project 
+PS C:\Users\Dextosterone\git\MarsRobotChallenge> marsRobot sample-input.json output.json
+Simulation complete. Output: {
+  VisitedCells: [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 }
+  ],
+  SamplesCollected: [ 'Fe', 'Si' ],
+  Battery: 24,
+  FinalPosition: { Location: { x: 1, y: 2 }, Facing: 'East' }      
+}
+Done.
+
+
+C:\Users\Dextosterone>marsRobot
+Usage: marsRobotCli.js <input.json> <output.json>
+
+works globally also now as a result. 

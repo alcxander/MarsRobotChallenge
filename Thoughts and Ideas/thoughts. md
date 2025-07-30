@@ -42,7 +42,7 @@ terrain seeding strategies
 json linter for examples provided, need to extend them to include session IDs,
 unit tests - code rabbit for this. Need something to know the cli works
 
-
+two routes here, attempted publishing on npmjs and then pulling the package back down 
 ----------------------
 
 
@@ -117,6 +117,18 @@ let's figure out what goes in each one
 looking at the cli structure, lot's of it looks ok but WHY does it not reuse the logic that was built elsewhere in simulator.ts? Weird it did that so now will rebuild the cli script to (loosely along these lines) import the simulator, create instance of the simulator class in the CLI processor then just pass the input in.  
 
 npx tsc lib/robot-simulator.ts -- make accessible version for CLI to run
+
+cli tasks add bin and executable to CLI Script
+
+renamed
+chmod +x scripts/marsRobot.mjs
+executable
+npm installed (with legacy peer deps)
+npm link needed for cli to work as desired in the requirements.
+
+could also push this to npmjs and make it installable, that would also work.
+
+
 ---------------
 
 
