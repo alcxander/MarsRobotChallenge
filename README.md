@@ -46,6 +46,24 @@ with your existing robot simulation.
 ---------------------------------------------------------------
 
 
+### Testing REST API with curl
+
+run dev i.e. npm run dev
+
+have a json in the local folder named sample-input.json
+
+```
+curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: application/json" -d @sample-input.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+```
+
+also added to scripts so you can run 
+
+'npm run marsBot1' 
+
+In the terminal. It's currently set to 'sample-input.json' only though sorry. 
+
+
+
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/alcxander/MarsRobotChallenge?utm_source=oss&utm_medium=github&utm_campaign=alcxander%2FMarsRobotChallenge&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 

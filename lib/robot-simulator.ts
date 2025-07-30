@@ -203,6 +203,9 @@ export class MarsRobot {
       const requiredBattery = this.getRequiredBattery(command)
 
       // If we don't have enough battery but can extend solar panels, do it automatically
+      // The battery should never get to a state where it goes to 1 or 2 and causes boundary
+      // issues. If we encounter any issue we'll just break out of the loop.
+
       if (this.battery < requiredBattery && this.battery >= 1) {
         this.executeCommand("E")
       }
@@ -242,6 +245,8 @@ export class MarsRobot {
     }
   }
 
+  // EXAMPLE of incorrect assumption here, that's what happens when you are 2/3 thoughts deep and get
+  // distracted on another problem. left this in now as a sign of what happened previously.
   //I feel like we are not collecting samples correctly, let's put in get sample at currentLocation 
   // for first iteration of the engine as it's not being picked up
 
@@ -263,6 +268,19 @@ export class MarsRobot {
 
 export function simulateRobot(input: RobotInput): RobotOutput {
   // Validate input and keep application clean from bad inputs, will but other considerations here after testing
+  /** 
+   * Validations done
+   * non empty arrays - no work given to be done
+   * non square terrain map - this can be removed really as the logic works ubt can create weird Obs states
+   * battery check - must be positive and must be a number e.g. 'thirty' does not count
+   * command array - must be an array
+   * command array II - must be a valid command so we don't let rubbish in here
+   * initial position - if not given will be error no assumptions on inital position made in case we assume it on top of an OBs
+   * initial position Obs - make sure initial pos not an Obs
+   * direction - make sure we have valid directions
+   * 
+   * */
+
   if (!input.terrain || !Array.isArray(input.terrain) || input.terrain.length === 0) {
     throw new Error("Invalid terrain: must be a non-empty 2D array")
   }

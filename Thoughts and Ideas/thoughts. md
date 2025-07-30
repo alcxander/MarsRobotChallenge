@@ -96,5 +96,27 @@ in simulation cases add section that says if battery is ever 0 while doing an ac
 
 #question currently when a sample is collected should we remove that from the terrain so it can't be picked up a second time?
 
+------------------------------------------
+
+to build still, CLI, REST server, separate the existing API route maybe, build out the commander (maybe).
+
+------------------------------------------
+
+
+potential structure
+
+app
+src -
+cli
+server
+logic
+
+let's figure out what goes in each one
+
+
+looking at the cli structure, lot's of it looks ok but WHY does it not reuse the logic that was built elsewhere in simulator.ts? Weird it did that so now will rebuild the cli script to (loosely along these lines) import the simulator, create instance of the simulator class in the CLI processor then just pass the input in.  
+
+
+---------------
 
 

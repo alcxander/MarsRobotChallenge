@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "marsBot1": "curl.exe -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
