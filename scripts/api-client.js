@@ -1,5 +1,20 @@
 #!/usr/bin/env node
 
+//
+// this function fulfills criteria of the instructions so long as the server is running
+// however i'm not sure that's exactly what was wanted. So this section runs and serves
+// if the server is running alredy, so:
+// npm run dev
+// node api-client.js input
+// receive output 
+// --------------------------------------
+// this requires server running and to run the command with node. This could be achieved
+// with link or install package though but it still requires the server to be running 
+// already. If that was not the case then there is another file that creates a server on
+// the fly to handle the request
+ 
+
+
 const fs = require("fs").promises
 const https = require("https")
 const http = require("http")
