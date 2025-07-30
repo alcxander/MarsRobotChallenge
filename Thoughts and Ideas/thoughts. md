@@ -194,3 +194,67 @@ and a next project SHOULD be picking the ts over the js but for some reason it i
 
 
 
+------------------------------
+
+cli mode test and results
+with server running through npm dev
+ marsRobotCLI1 sample-input.json output.json
+Loaded robot-simulator.js
+Terrain matrix: [["Fe","Fe","Se","W"],["W","Si","Obs","Zn"],["Fe","W","Si","Se"]]
+Simulation complete. Output: {
+  VisitedCells: [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 }
+  ],
+  SamplesCollected: [ 'Fe', 'Si' ],
+  Battery: 24,
+  FinalPosition: { Location: { x: 1, y: 2 }, Facing: 'East' }      
+}
+Done. Output written to:  output.json
+
+-----------------------------------------------
+
+rest API client mode
+
+needed to do some moving about and fixing things for this annoyingly, looks like some esm commjs conflict came up that I didnt 
+catch earlier. going to align all modules to esm though.
+
+ C:\Users\Dextosterone\git\MarsRobotChallenge> marsRobotAPIServer2 sample-input.json
+Sending request to Mars Robot API...
+Input file: sample-input.json
+
+=== MARS ROBOT SIMULATION RESULTS ===
+
+🔋 Battery Level: 24 units
+📍 Final Position: (1, 2) facing East
+
+🗺️  Visited Cells (5):
+   1. (0, 0)
+   2. (1, 0)
+   3. (1, 1)
+   4. (1, 2)
+   5. (2, 2)
+
+🧪 Samples Collected (2):
+   1. Fe
+   2. Si
+
+=====================================
+
+
+-----------------------------------------------
+
+
+rest api server mode 
+
+running
+PS C:\Users\Dextosterone\git\MarsRobotChallenge> marsRobotAPIServer2
+🚀 MarsRobot API server running on http://localhost:3000
+Test this out with Postman or similar or curl at the endpoint. 
+Sample CURL Command for Windows works well if you run in same folder otherwise update the sampleinput json path fully if running elsewhere.
+curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: application/json" -d @sample-input.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+
+and if i run one of the other commands it works just fine

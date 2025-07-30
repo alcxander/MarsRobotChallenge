@@ -7,7 +7,10 @@ import { basename } from "path";
 
 import { MarsRobot, simulateRobot } from "../dist/robot-simulator.js";
 import chalk from "chalk";
-import pkg from "../package.json" assert { type: "json" };
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json");
+
 
   const usage = `
 ${chalk.green.bold('Usage:')}

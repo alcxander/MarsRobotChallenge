@@ -203,7 +203,7 @@ export class MarsRobot {
     }
 }
 export function simulateRobot(input) {
-    console.log("Loaded robot-simulator.ts");
+    console.log("Loaded robot-simulator.js");
     // Validate input and keep application clean from bad inputs, will but other considerations here after testing
     /**
      * Validations done
