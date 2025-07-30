@@ -130,5 +130,67 @@ could also push this to npmjs and make it installable, that would also work.
 
 
 ---------------
+30/07 14:18
+rest server is working and serving
+can run from command line the command 'marsrobotapi', that starts the server which can then be queried at /api/simulate
+
+PS C:\Users\Dextosterone\git\MarsRobotChallenge> curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: application/json" -d @sample-input.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+curl.exe :   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+At line:1 char:1
++ curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  % Total    % ...  Time  Current:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   444    0   191  100   253  31373  41557 --:--:-- --:--:-- --:--:-- 74000
+{
+    "VisitedCells":  [
+                         {
+                             "x":  0,
+                             "y":  0
+                         },
+                         {
+                             "x":  1,
+                             "y":  0
+                         },
+                         {
+                             "x":  1,
+                             "y":  1
+                         },
+                         {
+                             "x":  1,
+                             "y":  2
+                         },
+                         {
+                             "x":  2,
+                             "y":  2
+                         }
+                     ],
+    "SamplesCollected":  [
+                             "Fe",
+                             "Si"
+                         ],
+    "Battery":  24,
+    "FinalPosition":  {
+                          "Location":  {
+                                           "x":  1,
+                                           "y":  2
+                                       },
+                          "Facing":  "East"
+                      }
+}
+
+PS C:\Users\Dextosterone\git\MarsRobotChallenge> 
+
+-------------------------------------------------------
+
+5-bug-simulator-not-checking-terrain-types
+
+fixing this issue exposed another issue, the tsx compiled code for the cli bot lives in the same folder as the other simulator, not normally an issue but the router points its import at 
+import { simulateRobot, type RobotInput } from "@/lib/robot-simulator"
+and a next project SHOULD be picking the ts over the js but for some reason it isn't. 
+
 
 

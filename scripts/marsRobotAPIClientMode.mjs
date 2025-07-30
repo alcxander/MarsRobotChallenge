@@ -1,5 +1,15 @@
 #!/usr/bin/env node
 
+//
+// this function fulfills criteria of the instructions so long as the server is running
+// however i'm not sure that's exactly what was wanted. So this section runs and serves
+// if the server is running already, so:
+// npm run dev
+// node api-client.js input (will change this on bin command to be something better)
+// receive output 
+// --------------------------------------
+
+
 const fs = require("fs").promises
 const https = require("https")
 const http = require("http")
@@ -65,7 +75,7 @@ function formatOutput(result) {
       console.log(`   ${index + 1}. ${sample}`)
     })
   } else {
-    console.log("   No samples collected")
+    console.log("No samples collected")
   }
 
   console.log("\n=====================================\n")

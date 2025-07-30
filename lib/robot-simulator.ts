@@ -267,6 +267,7 @@ export class MarsRobot {
 }
 
 export function simulateRobot(input: RobotInput): RobotOutput {
+  console.log("Loaded robot-simulator.ts")
   // Validate input and keep application clean from bad inputs, will but other considerations here after testing
   /** 
    * Validations done
@@ -278,7 +279,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
    * initial position - if not given will be error no assumptions on inital position made in case we assume it on top of an OBs
    * initial position Obs - make sure initial pos not an Obs
    * direction - make sure we have valid directions
-   * 
+   * missed- terrain checking
    * */
 
   if (!input.terrain || !Array.isArray(input.terrain) || input.terrain.length === 0) {
@@ -287,6 +288,21 @@ export function simulateRobot(input: RobotInput): RobotOutput {
 
   if (!input.terrain.every((row) => Array.isArray(row) && row.length === input.terrain[0].length)) {
     throw new Error("Invalid terrain: all rows must have the same length")
+  }
+  console.log("Terrain matrix:", JSON.stringify(input.terrain));
+
+  const validTerrains: TerrainType[] = ["Fe" , "Se" , "W" , "Si" , "Zn" , "Obs"];
+  //validate terrain types
+  function isValidTerrain(t:string): t is TerrainType{
+    const valid = validTerrains.includes(t as TerrainType)
+    if (!valid){
+      console.warn(`Invalid terrain found: '${t}'`);
+    }
+    return valid;
+  }
+  const allValid = input.terrain.every(row => row.every(cell => isValidTerrain(cell)));
+  if(!allValid){
+    throw new Error("Invalid terrain types supplied, please double check what types were given. Allowed terrain types: Fe , Se , W , Si , Zn , Obs.")
   }
 
   if (typeof input.battery !== "number" || input.battery < 0) {

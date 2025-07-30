@@ -1,13 +1,15 @@
 {
   "name": "marsrobot",
-  "version": "0.3.0",
+  "version": "0.5.1",
   "private": false,
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "marsBot1": "curl -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json"
+    "marsBot1": "curl -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json",
+    "api": "node ./scripts/marsRobotApi.mjs",
+    "build-lib": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -39,6 +41,7 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "autoprefixer": "^10.4.20",
+    "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
@@ -50,6 +53,7 @@
     "https": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
+    "marsrobot": "^0.3.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",
     "path": "latest",
@@ -74,6 +78,8 @@
     "typescript": "^5"
   },
   "bin": {
-  "marsRobot": "./scripts/marsRobot.mjs"
+    "marsRobotCLI1": "./scripts/marsRobot.mjs",
+    "marsRobotAPIServer2":"./scripts/marsRobotAPIClientMode.mjs",
+    "marsRobotAPIClient3": "./scripts/marsRobotApi.mjs"
   }
 }
