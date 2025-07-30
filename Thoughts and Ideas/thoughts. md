@@ -186,5 +186,11 @@ PS C:\Users\Dextosterone\git\MarsRobotChallenge>
 
 -------------------------------------------------------
 
+5-bug-simulator-not-checking-terrain-types
+
+fixing this issue exposed another issue, the tsx compiled code for the cli bot lives in the same folder as the other simulator, not normally an issue but the router points its import at 
+import { simulateRobot, type RobotInput } from "@/lib/robot-simulator"
+and a next project SHOULD be picking the ts over the js but for some reason it isn't. 
+
 
 

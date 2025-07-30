@@ -10,7 +10,7 @@
 // Author Dexter*/
 
 import http from 'http';
-import { simulateRobot } from '../lib/robot-simulator.js';
+import { simulateRobot } from '../dist/robot-simulator.js';
 import chalk from "chalk";
 
 const PORT = process.env.PORT || 3000;

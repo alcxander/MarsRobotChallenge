@@ -8,7 +8,8 @@
     "lint": "next lint",
     "start": "next start",
     "marsBot1": "curl -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json",
-    "api": "node ./scripts/marsRobotApi.mjs"
+    "api": "node ./scripts/marsRobotApi.mjs",
+    "build-lib": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

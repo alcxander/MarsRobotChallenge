@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { basename } from "path";
 //some other imports here i'm not thinking of
 
-import { MarsRobot, simulateRobot } from "../lib/robot-simulator.js";
+import { MarsRobot, simulateRobot } from "../dist/robot-simulator.js";
 import chalk from "chalk";
 import pkg from "../package.json" assert { type: "json" };
 
