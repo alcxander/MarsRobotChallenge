@@ -1,5 +1,5 @@
 {
-  "terrain": [["Fe", "Fe", "Se", "W"], ["W", "Si", "Obs", "Zn"], ["Fe", "W", "Si", "Se"]],
+  "terrain": [["Fe", "Fe", "Se"], ["W", "Si", "Obs"], ["Fe", "W", "Si"]],
   "battery": 50,
   "commands": ["F", "S", "R", "F", "F", "L", "F", "S", "E", "B"],
   "initialPosition": {
