@@ -1,0 +1,9 @@
+{
+  "terrain": [["Fe", "Fe", "Se", "W"], ["W", "Si", "Obs", "Zn"], ["Fe", "W", "Si", "Se"]],
+  "battery": 50,
+  "commands": ["F", "Knitting", "R", "F", "F", "L", "F", "S", "E", "B"],
+  "initialPosition": {
+    "location": { "x": 0, "y": 0 },
+    "facing": "East"
+  }
+}
