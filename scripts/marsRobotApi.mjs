@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 //**
 // so to distinguish this from the other API client, this code does not need the server running first, this creates its
 // own server that serves the code at /api/simulate. It gives some feedback to the user on startup and is then otherwise
