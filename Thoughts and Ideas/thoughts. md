@@ -194,3 +194,247 @@ and a next project SHOULD be picking the ts over the js but for some reason it i
 
 
 
+------------------------------
+
+cli mode test and results
+with server running through npm dev
+ marsRobotCLI1 sample-input.json output.json
+Loaded robot-simulator.js
+Terrain matrix: [["Fe","Fe","Se","W"],["W","Si","Obs","Zn"],["Fe","W","Si","Se"]]
+Simulation complete. Output: {
+  VisitedCells: [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 }
+  ],
+  SamplesCollected: [ 'Fe', 'Si' ],
+  Battery: 24,
+  FinalPosition: { Location: { x: 1, y: 2 }, Facing: 'East' }      
+}
+Done. Output written to:  output.json
+
+-----------------------------------------------
+
+rest API client mode
+
+needed to do some moving about and fixing things for this annoyingly, looks like some esm commjs conflict came up that I didnt 
+catch earlier. going to align all modules to esm though.
+
+ C:\Users\Dextosterone\git\MarsRobotChallenge> marsRobotAPIServer2 sample-input.json
+Sending request to Mars Robot API...
+Input file: sample-input.json
+
+=== MARS ROBOT SIMULATION RESULTS ===
+
+🔋 Battery Level: 24 units
+📍 Final Position: (1, 2) facing East
+
+🗺️  Visited Cells (5):
+   1. (0, 0)
+   2. (1, 0)
+   3. (1, 1)
+   4. (1, 2)
+   5. (2, 2)
+
+🧪 Samples Collected (2):
+   1. Fe
+   2. Si
+
+=====================================
+
+
+-----------------------------------------------
+
+
+rest api server mode 
+
+running
+PS C:\Users\Dextosterone\git\MarsRobotChallenge> marsRobotAPIServer2
+🚀 MarsRobot API server running on http://localhost:3000
+Test this out with Postman or similar or curl at the endpoint. 
+Sample CURL Command for Windows works well if you run in same folder otherwise update the sampleinput json path fully if running elsewhere.
+curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: application/json" -d @sample-input.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+
+and if i run one of the other commands it works just fine
+
+
+Mobbin used images for design
+
+
+------------------------------------------
+
+
+ ✓ tests/marsRobotCLILogic.test.js (5 tests) 16ms
+   ✓ marsRobotCLILogic > prints help when no args 9ms
+   ✓ marsRobotCLILogic > prints version with --version 1ms
+   ✓ marsRobotCLILogic > prints error on incorrect number of args 2ms
+   ✓ marsRobotCLILogic > runs simulation and writes output 2ms
+   ✓ marsRobotCLILogic > handles JSON parse error gracefully 1ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  12:58:28
+   Duration  79ms
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+
+
+cli overhauled to get better test coverage
+
+> marsrobot@0.5.3 test:coverage
+> vitest --coverage
+
+
+ DEV  v3.2.4 C:/Users/Dextosterone/git/MarsRobotChallenge
+      Coverage enabled with v8
+
+stdout | tests/marsRobotApi.test.js > MarsRobot API server
+Test server started on http://localhost:4000
+
+stdout | tests/marsRobotApi.test.js > MarsRobot API server
+Test server closed on http://localhost:4000
+
+ ✓ tests/marsRobotApi.test.js (3 tests) 72ms
+ ✓ tests/marsRobotCLILogic.test.js (5 tests) 24ms
+
+ RERUN  scripts/marsRobotAPIClientMode.mjs 
+
+ ✓ tests/simulator-results.test.ts (1 test) 1426ms
+   ✓ makeRequest > should call API and return expected known data results  1423ms
+stdout | tests/api-client-basic-validation.test.ts > makeRequest > should call API with malformed data and return invalid JSON
+error response: Invalid terrain: must be a non-empty 2D array
+
+ ✓ tests/api-client-basic-validation.test.ts (5 tests) 2165ms
+   ✓ makeRequest > should call API and return data  1400ms
+
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  15:37:11
+   Duration  3.78s
+
+ % Coverage report from v8
+----------------------------|---------|----------|---------|---------|-------------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+----------------------------|---------|----------|---------|---------|-------------------------
+All files                   |      40 |     62.5 |   33.33 |      40 | 
+ marsRobotAPIClientMode.mjs |      40 |     62.5 |   33.33 |      40 | 47-48,53,61-125,130-131
+----------------------------|---------|----------|---------|---------|-------------------------
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+
+test results
+> marsrobot@0.5.3 test:coverage
+> vitest --coverage
+
+
+ DEV  v3.2.4 C:/Users/Dextosterone/git/MarsRobotChallenge
+      Coverage enabled with v8
+
+stdout | tests/marsRobotApi.test.js > MarsRobot API server
+Test server started on http://localhost:4000
+
+ ✓ tests/simulator-results.test.ts (1 test) 68ms
+stdout | tests/marsRobotApi.test.js > MarsRobot API server
+Test server closed on http://localhost:4000
+
+ ✓ tests/marsRobotCLILogic.test.js (5 tests) 19ms
+ ✓ tests/marsRobotApi.test.js (3 tests) 63ms
+stdout | tests/api-client-basic-validation.test.ts > makeRequest > should call API with malformed data and return invalid JSON
+error response: Invalid terrain: must be a non-empty 2D array
+
+ ✓ tests/api-client-basic-validation.test.ts (5 tests) 542ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed (14)
+   Start at  15:45:56
+   Duration  2.54s (transform 304ms, setup 0ms, collect 709ms, tests 692ms, environment 2ms, prepare 1.90s)
+
+ % Coverage report from v8
+-------------------------------------|---------|----------|---------|---------|-------------------------
+File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------------------------|---------|----------|---------|---------|-------------------------
+All files                            |    2.09 |    25.55 |    2.94 |    2.09 | 
+ MarsRobotChallenge                  |       0 |        0 |       0 |       0 | 
+  next.config.mjs                    |       0 |        0 |       0 |       0 | 1-14
+  postcss.config.mjs                 |       0 |        0 |       0 |       0 | 1-8
+  tailwind.config.ts                 |       0 |        0 |       0 |       0 | 1-98
+ MarsRobotChallenge/app              |       0 |        0 |       0 |       0 | 
+  layout.tsx                         |       0 |        0 |       0 |       0 | 1-31
+  page.tsx                           |       0 |        0 |       0 |       0 | 1-343
+ MarsRobotChallenge/app/api/simulate |       0 |        0 |       0 |       0 | 
+  route.ts                           |       0 |        0 |       0 |       0 | 1-22
+ MarsRobotChallenge/components       |       0 |        0 |       0 |       0 | 
+  theme-provider.tsx                 |       0 |        0 |       0 |       0 | 1-11
+ MarsRobotChallenge/components/ui    |       0 |        0 |       0 |       0 | 
+  accordion.tsx                      |       0 |        0 |       0 |       0 | 1-58                    
+  alert-dialog.tsx                   |       0 |        0 |       0 |       0 | 1-141
+  alert.tsx                          |       0 |        0 |       0 |       0 | 1-59
+  aspect-ratio.tsx                   |       0 |        0 |       0 |       0 | 1-5
+  avatar.tsx                         |       0 |        0 |       0 |       0 | 1-50
+  badge.tsx                          |       0 |        0 |       0 |       0 | 1-36
+  breadcrumb.tsx                     |       0 |        0 |       0 |       0 | 1-115
+  button.tsx                         |       0 |        0 |       0 |       0 | 1-56
+  calendar.tsx                       |       0 |        0 |       0 |       0 | 1-213
+  card.tsx                           |       0 |        0 |       0 |       0 | 1-79
+  carousel.tsx                       |       0 |        0 |       0 |       0 | 1-262
+  chart.tsx                          |       0 |        0 |       0 |       0 | 1-365
+  checkbox.tsx                       |       0 |        0 |       0 |       0 | 1-30
+  collapsible.tsx                    |       0 |        0 |       0 |       0 | 1-9
+  command.tsx                        |       0 |        0 |       0 |       0 | 1-153
+  context-menu.tsx                   |       0 |        0 |       0 |       0 | 1-200
+  dialog.tsx                         |       0 |        0 |       0 |       0 | 1-122
+  drawer.tsx                         |       0 |        0 |       0 |       0 | 1-118
+  dropdown-menu.tsx                  |       0 |        0 |       0 |       0 | 1-200
+  form.tsx                           |       0 |        0 |       0 |       0 | 1-178
+  hover-card.tsx                     |       0 |        0 |       0 |       0 | 1-29
+  input-otp.tsx                      |       0 |        0 |       0 |       0 | 1-71
+  input.tsx                          |       0 |        0 |       0 |       0 | 1-22
+  label.tsx                          |       0 |        0 |       0 |       0 | 1-26
+  menubar.tsx                        |       0 |        0 |       0 |       0 | 1-236
+  navigation-menu.tsx                |       0 |        0 |       0 |       0 | 1-128
+  pagination.tsx                     |       0 |        0 |       0 |       0 | 1-117
+  popover.tsx                        |       0 |        0 |       0 |       0 | 1-31
+  progress.tsx                       |       0 |        0 |       0 |       0 | 1-28
+  radio-group.tsx                    |       0 |        0 |       0 |       0 | 1-44
+  resizable.tsx                      |       0 |        0 |       0 |       0 | 1-45
+  scroll-area.tsx                    |       0 |        0 |       0 |       0 | 1-48
+  select.tsx                         |       0 |        0 |       0 |       0 | 1-160
+  separator.tsx                      |       0 |        0 |       0 |       0 | 1-31
+  sheet.tsx                          |       0 |        0 |       0 |       0 | 1-140
+  sidebar.tsx                        |       0 |        0 |       0 |       0 | 1-763
+  skeleton.tsx                       |       0 |        0 |       0 |       0 | 1-15
+  slider.tsx                         |       0 |        0 |       0 |       0 | 1-28
+  sonner.tsx                         |       0 |        0 |       0 |       0 | 1-31
+  switch.tsx                         |       0 |        0 |       0 |       0 | 1-29
+  table.tsx                          |       0 |        0 |       0 |       0 | 1-117
+  tabs.tsx                           |       0 |        0 |       0 |       0 | 1-55
+  textarea.tsx                       |       0 |        0 |       0 |       0 | 1-22
+  toast.tsx                          |       0 |        0 |       0 |       0 | 1-129
+  toaster.tsx                        |       0 |        0 |       0 |       0 | 1-35
+  toggle-group.tsx                   |       0 |        0 |       0 |       0 | 1-61
+  toggle.tsx                         |       0 |        0 |       0 |       0 | 1-45
+  tooltip.tsx                        |       0 |        0 |       0 |       0 | 1-30
+  use-mobile.tsx                     |       0 |        0 |       0 |       0 | 1-19
+  use-toast.ts                       |       0 |        0 |       0 |       0 | 1-194                   
+ MarsRobotChallenge/hooks            |       0 |        0 |       0 |       0 | 
+  use-mobile.tsx                     |       0 |        0 |       0 |       0 | 1-19
+  use-toast.ts                       |       0 |        0 |       0 |       0 | 1-194
+ MarsRobotChallenge/lib              |       0 |        0 |       0 |       0 | 
+  robot-simulator.ts                 |       0 |        0 |       0 |       0 | 1-341
+  utils.ts                           |       0 |        0 |       0 |       0 | 1-6
+ MarsRobotChallenge/scripts          |   64.31 |    82.14 |   33.33 |   64.31 | 
+  marsRobotAPIClientMode.mjs         |      40 |     62.5 |   33.33 |      40 | 47-48,53,61-125,130-131
+  marsRobotApi.js                    |     100 |      100 |     100 |     100 | 
+  marsRobotApiStartServer.js         |       0 |        0 |       0 |       0 | 1-11
+  marsRobotCLI.js                    |       0 |        0 |       0 |       0 | 1-8
+  marsRobotCLILogic.js               |     100 |      100 |     100 |     100 | 
+ MarsRobotChallenge/scripts/Archive  |       0 |        0 |       0 |       0 | 
+  marsRobot previous version.js      |       0 |        0 |       0 |       0 | 1-80
+-------------------------------------|---------|----------|---------|---------|-------------------------
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+
+

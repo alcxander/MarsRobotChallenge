@@ -1,6 +1,7 @@
 {
   "name": "marsrobot",
-  "version": "0.5.1",
+  "version": "0.5.3",
+  "type": "module",
   "private": false,
   "scripts": {
     "build": "next build",
@@ -8,8 +9,11 @@
     "lint": "next lint",
     "start": "next start",
     "marsBot1": "curl -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json",
-    "api": "node ./scripts/marsRobotApi.mjs",
-    "build-lib": "tsc -p tsconfig.build.json"
+    "api": "node ./scripts/marsRobotApiStartServer.js",
+    "build-lib": "tsc -p tsconfig.build.json",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -52,14 +56,15 @@
     "http": "latest",
     "https": "latest",
     "input-otp": "1.4.1",
+    "inquirer": "^12.9.0",
     "lucide-react": "^0.454.0",
-    "marsrobot": "^0.3.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",
     "path": "latest",
-    "react": "^19.1.1",
+    "prompts": "^2.4.2",
+    "react": "^18.3.1",
     "react-day-picker": "9.8.0",
-    "react-dom": "^19.1.1",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
@@ -70,16 +75,19 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^22",
+    "@types/node": "^22.17.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   },
   "bin": {
-    "marsRobotCLI1": "./scripts/marsRobot.mjs",
-    "marsRobotAPIServer2":"./scripts/marsRobotAPIClientMode.mjs",
-    "marsRobotAPIClient3": "./scripts/marsRobotApi.mjs"
+    "marsRobotCLI1": "./scripts/marsRobotCLI.js",
+    "marsRobotAPIServer2": "./scripts/marsRobotApiStartServer.js",
+    "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.mjs"
   }
 }

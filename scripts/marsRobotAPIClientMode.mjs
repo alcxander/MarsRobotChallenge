@@ -10,9 +10,11 @@
 // --------------------------------------
 
 
-const fs = require("fs").promises
-const https = require("https")
-const http = require("http")
+import fs from "fs/promises";
+import https from "https";
+import http from "http";
+import { fileURLToPath } from "url";
+import { basename } from "path";
 
 async function makeRequest(hostname, port, path, data, useHttps = false) {
   return new Promise((resolve, reject) => {
@@ -61,12 +63,12 @@ function formatOutput(result) {
 
   console.log(`🔋 Battery Level: ${result.Battery} units`)
   console.log(
-    `📍 Final Position: (${result.FinalPosition.Location.X}, ${result.FinalPosition.Location.Y}) facing ${result.FinalPosition.Facing}`,
+    `📍 Final Position: (${result.FinalPosition.Location.x}, ${result.FinalPosition.Location.y}) facing ${result.FinalPosition.Facing}`,
   )
 
   console.log(`\n🗺️  Visited Cells (${result.VisitedCells.length}):`)
   result.VisitedCells.forEach((cell, index) => {
-    console.log(`   ${index + 1}. (${cell.X}, ${cell.Y})`)
+    console.log(`   ${index + 1}. (${cell.x}, ${cell.y})`)
   })
 
   console.log(`\n🧪 Samples Collected (${result.SamplesCollected.length}):`)
@@ -122,8 +124,10 @@ async function main() {
   }
 }
 
-if (require.main === module) {
-  main()
+//think ive been tripping myself up managing different types of setups here, just pushing all of them to esm
+
+if (basename(fileURLToPath(import.meta.url)) === basename(process.argv[1])) {
+  main();
 }
 
-module.exports = { makeRequest, formatOutput }
+export { makeRequest, formatOutput };
