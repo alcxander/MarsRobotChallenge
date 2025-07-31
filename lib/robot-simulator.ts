@@ -83,7 +83,6 @@ export class MarsRobot {
     this.facing = directions[(currentIndex + 1) % 4]
   }
 
-  //TODO: check if pairing this as two is better than pairing it as all 4
   private isValidPosition(pos: Position): boolean {
     return (
       pos.x >= 0 &&
