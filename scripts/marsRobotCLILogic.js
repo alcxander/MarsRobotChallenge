@@ -3,14 +3,12 @@
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import { basename } from "path";
-//some other imports here i'm not thinking of
 
-import { MarsRobot, simulateRobot } from "../dist/robot-simulator.js";
+import { simulateRobot } from "../dist/robot-simulator.js";
 import chalk from "chalk";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pkg = require("../package.json");
-
 
   const usage = `
 ${chalk.green.bold('Usage:')}

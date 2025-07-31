@@ -8,6 +8,10 @@ describe('makeRequest', () => {
     const data = sampleInput
     const res = await makeRequest('localhost', 3000, '/api/simulate', data, false)
     expect(res.statusCode).toBe(200)
+    expect(res.data).toHaveProperty("VisitedCells")
+    expect(res.data).toHaveProperty("SamplesCollected")
+    expect(res.data).toHaveProperty("Battery")
+    expect(res.data).toHaveProperty("FinalPosition")
     expect(res.data).toEqual(test_expected_result)
   })
 })
