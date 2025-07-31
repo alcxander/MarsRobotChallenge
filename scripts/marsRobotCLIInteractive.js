@@ -2,7 +2,9 @@
 import fs from "fs/promises";
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { simulateRobot } from "../dist/robot-simulator.js"; // adjust path if needed
+import { simulateRobot } from "../dist/robot-simulator.js"; 
+import { aStar, pathToCommands } from "./planner.js";
+
 
 async function main() {
   console.log(chalk.blue.bold(">> Starting interactive Mars Robot CLI..."));
@@ -77,7 +79,7 @@ async function main() {
       {
         type: "input",
         name: "command",
-        message: chalk.cyan("Enter command:"),
+        message: chalk.cyan("Enter command: (or 'plan path x1 y1 x2 y2'):"),
       },
     ]);
 
@@ -87,6 +89,56 @@ async function main() {
       console.log(chalk.blue("👋 Exiting interactive CLI. Goodbye!"));
       process.exit(0);
     }
+
+    if (normalized.startsWith("plan path")) {
+    const parts = normalized.split(/\s+/);
+    if (parts.length !== 6) {
+      console.log(chalk.yellow("⚠️ Usage: plan path <startX> <startY> <goalX> <goalY>"));
+      continue;
+    }
+    const startX = parseInt(parts[2], 10);
+    const startY = parseInt(parts[3], 10);
+    const goalX = parseInt(parts[4], 10);
+    const goalY = parseInt(parts[5], 10);
+
+    if (
+      isNaN(startX) || isNaN(startY) || isNaN(goalX) || isNaN(goalY) ||
+      startX < 0 || startY < 0 || goalX < 0 || goalY < 0
+    ) {
+      console.log(chalk.yellow("⚠️ Coordinates must be non-negative integers."));
+      continue;
+    }
+
+    // Run A* planner
+    const terrain = state.terrain;
+    const start = { x: startX, y: startY };
+    const goal = { x: goalX, y: goalY };
+
+    try {
+      const path = aStar(terrain, start, goal);
+      if (!path) {
+        console.log(chalk.red("❌ No path found."));
+        continue;
+      }
+
+      // Use robot's current facing from simulation output or state (default 'N')
+      const currentFacing = simOutput?.FinalPosition?.Facing;
+      if (!['North', 'East', 'South', 'West'].includes(currentFacing)) {
+        currentFacing = 'North';
+      }
+      const commands = pathToCommands(path, currentFacing);
+
+      // Append planned commands to state's command array
+      state.commands = [...state.commands, ...commands];
+      simOutput = simulateRobot(state);
+
+      console.log(chalk.green(`✅ Path planned and ${commands.length} commands added.`));
+    } catch (err) {
+      console.log(chalk.red(`❌ Error during planning: ${err.message}`));
+    }
+    continue;
+  }
+
 
     // Map user-friendly commands to your simulator commands:
     const commandMap = {
