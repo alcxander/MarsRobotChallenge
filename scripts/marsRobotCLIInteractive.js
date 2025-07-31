@@ -106,9 +106,11 @@ async function main() {
 
     if (
       isNaN(startX) || isNaN(startY) || isNaN(goalX) || isNaN(goalY) ||
-      startX < 0 || startY < 0 || goalX < 0 || goalY < 0
+      startX < 0 || startY < 0 || goalX < 0 || goalY < 0 ||
++     startX >= state.terrain[0].length || startY >= state.terrain.length ||
++     goalX >= state.terrain[0].length || goalY >= state.terrain.length
     ) {
-      console.log(chalk.yellow("⚠️ Coordinates must be non-negative integers."));
+      console.log(chalk.yellow("⚠️ Coordinates must be non-negative integers within terrain bounds."));
       continue;
     }
 
@@ -125,7 +127,7 @@ async function main() {
       }
 
       // Use robot's current facing from simulation output or state (default 'N')
-      const currentFacing = simOutput?.FinalPosition?.Facing;
+      let currentFacing = simOutput?.FinalPosition?.Facing;
       if (!['North', 'East', 'South', 'West'].includes(currentFacing)) {
         currentFacing = 'North';
       }
