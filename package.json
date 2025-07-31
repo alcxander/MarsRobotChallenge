@@ -56,10 +56,12 @@
     "http": "latest",
     "https": "latest",
     "input-otp": "1.4.1",
+    "inquirer": "^12.9.0",
     "lucide-react": "^0.454.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",
     "path": "latest",
+    "prompts": "^2.4.2",
     "react": "^18.3.1",
     "react-day-picker": "9.8.0",
     "react-dom": "^18.3.1",
@@ -86,6 +88,6 @@
   "bin": {
     "marsRobotCLI1": "./scripts/marsRobotCLI.js",
     "marsRobotAPIServer2": "./scripts/marsRobotApiStartServer.js",
-    "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.js"
+    "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.mjs"
   }
 }
