@@ -1,12 +1,18 @@
+import chalk from 'chalk';
+
 export function aStar(terrain, start, goal) {
+  const rows = terrain.length;
+  const cols = terrain[0].length;
+  console.log("A* called with start:", start, "goal:", goal);
+  console.log("Terrain size:", rows, "rows x", cols, "cols");
+
   function heuristic(a, b) {
     return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
   }
 
-  const rows = terrain.length;
-  const cols = terrain[0].length;
-
   function neighbors(node) {
+    //console.log("Checking neighbors for", node);
+
     const results = [];
     const dirs = [
       { x: 1, y: 0 },
@@ -18,11 +24,14 @@ export function aStar(terrain, start, goal) {
       const nx = node.x + d.x;
       const ny = node.y + d.y;
       if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
-        if (terrain[ny][nx] !== 'X') {
+        const cell = terrain[ny][nx];
+        //console.log(`  Checking neighbor cell (${nx},${ny}) - terrain: ${cell}`);
+        if (cell !== 'Obs') {
           results.push({ x: nx, y: ny });
         }
       }
     }
+    //console.log(`  Neighbors for ${node.x},${node.y}:`, results);
     return results;
   }
 
@@ -33,40 +42,65 @@ export function aStar(terrain, start, goal) {
     return `${n.x},${n.y}`;
   }
 
+  // Initialize gScore and fScore maps *early* before loop
   const gScore = new Map();
   gScore.set(nodeKey(start), 0);
+  //console.log(`gScore initialized for start node ${nodeKey(start)} with 0`);
 
   const fScore = new Map();
   fScore.set(nodeKey(start), heuristic(start, goal));
 
   while (openSet.length > 0) {
-    openSet.sort((a, b) => (fScore.get(nodeKey(a)) || Infinity) - (fScore.get(nodeKey(b)) || Infinity));
+    openSet.sort(
+      (a, b) =>
+        (fScore.get(nodeKey(a)) ?? Infinity) - (fScore.get(nodeKey(b)) ?? Infinity)
+    );
     const current = openSet.shift();
+    //console.log("Current node:", current);
 
     if (current.x === goal.x && current.y === goal.y) {
       const path = [];
-      let curr = current;
-      while (curr) {
-        path.unshift(curr);
-        curr = cameFrom.get(nodeKey(curr));
+      let currKey = nodeKey(current);
+      let node = current;
+      while (cameFrom.has(currKey)) {
+        path.unshift(node);
+        node = cameFrom.get(currKey);
+        currKey = nodeKey(node);
       }
+      path.unshift(start);
+      console.log(chalk.green("Goal reached! Path:"), path);
       return path;
     }
 
     for (const neighbor of neighbors(current)) {
-      const tentative_gScore = (gScore.get(nodeKey(current)) || Infinity) + 1;
+      const currentKey = nodeKey(current);
+      const neighborKey = nodeKey(neighbor);
 
-      if (tentative_gScore < (gScore.get(nodeKey(neighbor)) || Infinity)) {
-        cameFrom.set(nodeKey(neighbor), current);
-        gScore.set(nodeKey(neighbor), tentative_gScore);
-        fScore.set(nodeKey(neighbor), tentative_gScore + heuristic(neighbor, goal));
+      const currentG = gScore.get(currentKey);
+      //console.log(`gScore for current node ${currentKey}:`, currentG);
+
+      const tentative_gScore = (currentG !== undefined ? currentG : Infinity) + 1;
+      //console.log(`tentative g score for neighbor ${neighborKey}:`, tentative_gScore);
+
+      const neighborG = gScore.get(neighborKey);
+      const neighborF = fScore.get(neighborKey);
+      //console.log(`gScore for neighbor ${neighborKey}:`, neighborG);
+      //console.log(`fScore for neighbor ${neighborKey}:`, neighborF);
+
+      if (tentative_gScore < (neighborG ?? Infinity)) {
+        //console.log(`Updating scores for neighbor ${neighborKey}`);
+        cameFrom.set(neighborKey, current);
+        gScore.set(neighborKey, tentative_gScore);
+        fScore.set(neighborKey, tentative_gScore + heuristic(neighbor, goal));
         if (!openSet.some(n => n.x === neighbor.x && n.y === neighbor.y)) {
+          //console.log(`Adding neighbor ${neighborKey} to openSet`);
           openSet.push(neighbor);
         }
       }
     }
   }
 
+  console.log(chalk.red("No path found."));
   return null;
 }
 

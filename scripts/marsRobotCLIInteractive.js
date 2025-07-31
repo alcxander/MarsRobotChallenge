@@ -92,7 +92,9 @@ async function main() {
 
     if (normalized.startsWith("plan path")) {
     const parts = normalized.split(/\s+/);
+    
     if (parts.length !== 6) {
+      console.log("hellloooooooooo", normalized)
       console.log(chalk.yellow("⚠️ Usage: plan path <startX> <startY> <goalX> <goalY>"));
       continue;
     }
@@ -100,6 +102,7 @@ async function main() {
     const startY = parseInt(parts[3], 10);
     const goalX = parseInt(parts[4], 10);
     const goalY = parseInt(parts[5], 10);
+    console.log(startX, startY, goalX, goalY);
 
     if (
       isNaN(startX) || isNaN(startY) || isNaN(goalX) || isNaN(goalY) ||
