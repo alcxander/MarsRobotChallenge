@@ -14,7 +14,6 @@ import fs from "fs/promises";
 import https from "https";
 import http from "http";
 import { fileURLToPath } from "url";
-import path from "path";
 import { basename } from "path";
 
 async function makeRequest(hostname, port, path, data, useHttps = false) {

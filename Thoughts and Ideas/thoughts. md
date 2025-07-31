@@ -261,3 +261,26 @@ and if i run one of the other commands it works just fine
 
 
 Mobbin used images for design
+
+
+------------------------------------------
+
+
+ ✓ tests/marsRobotCLILogic.test.js (5 tests) 16ms
+   ✓ marsRobotCLILogic > prints help when no args 9ms
+   ✓ marsRobotCLILogic > prints version with --version 1ms
+   ✓ marsRobotCLILogic > prints error on incorrect number of args 2ms
+   ✓ marsRobotCLILogic > runs simulation and writes output 2ms
+   ✓ marsRobotCLILogic > handles JSON parse error gracefully 1ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  12:58:28
+   Duration  79ms
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+
+
+cli overhauled to get better test coverage
+

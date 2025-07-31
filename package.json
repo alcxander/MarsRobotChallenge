@@ -1,6 +1,6 @@
 {
   "name": "marsrobot",
-  "version": "0.5.1",
+  "version": "0.5.3",
   "type": "module",
   "private": false,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "next lint",
     "start": "next start",
     "marsBot1": "curl -X POST http://localhost:3000/api/simulate -H \"Content-Type: application/json\" -d @sample-input.json",
-    "api": "node ./scripts/marsRobotApi.mjs",
+    "api": "node ./scripts/marsRobotApiStartServer.js",
     "build-lib": "tsc -p tsconfig.build.json",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -84,8 +84,8 @@
     "vitest": "^3.2.4"
   },
   "bin": {
-    "marsRobotCLI1": "./scripts/marsRobot.js",
-    "marsRobotAPIServer2": "./scripts/marsRobotApi.js",
+    "marsRobotCLI1": "./scripts/marsRobotCLI.js",
+    "marsRobotAPIServer2": "./scripts/marsRobotApiStartServer.js",
     "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.js"
   }
 }

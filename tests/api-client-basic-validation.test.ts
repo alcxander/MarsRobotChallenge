@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { makeRequest } from '../scripts/marsRobotAPIClientMode.js'
+import { makeRequest } from '../scripts/marsRobotAPIClientMode.mjs'
 import sampleInput from '../samples/sample-input.json'
 import sample_input_bad_terrain from '../samples/sample_input_bad_terrain.json'
 import sample_input_bad_command from '../samples/sample_input_bad_command.json'
@@ -50,4 +50,5 @@ describe('makeRequest', () => {
     console.log("error response: " + res.data.error)
     expect(res.data.error).toMatch(/invalid/i)
   })
+  
 })

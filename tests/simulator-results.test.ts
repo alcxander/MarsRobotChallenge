@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { makeRequest } from '../scripts/marsRobotAPIClientMode.js'
+import { makeRequest } from '../scripts/marsRobotAPIClientMode.mjs'
 import sampleInput from '../samples/sample-input.json'
 import test_expected_result from '../samples/test_expected_result.json'
 
