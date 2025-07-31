@@ -4,9 +4,8 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "Dexters Mars Project",
+  description: "Created for OCS/OBS",
 };
 
 export default function RootLayout({
@@ -17,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/logo.svg" sizes="any" />
         <style>{`
           html {
             font-family: ${GeistSans.style.fontFamily};

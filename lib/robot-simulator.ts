@@ -55,7 +55,7 @@ export class MarsRobot {
     this.samplesCollected = []
 
     //no longer does anything, misunderstood an instruction
-    this.collectSampleAtCurrentPosition(); 
+    //this.collectSampleAtCurrentPosition(); 
   }
 
   private getDirectionVector(direction: Direction): Position {

@@ -68,7 +68,7 @@ async function main() {
   }
 
   console.log(chalk.green("\n✅ Starting simulation! Type commands to control the robot."));
-  console.log(chalk.gray("Commands: move (f), left (l), right (r), backward (b), sample (s), recharge (e), exit\n"));
+  console.log(chalk.gray("Commands: move (f), left (l), right (r), backward (b), sample (s), recharge (e), exit (q)\n"));
 
   while (true) {
     displayMap(state, simOutput);

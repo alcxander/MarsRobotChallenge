@@ -88,6 +88,7 @@
   "bin": {
     "marsRobotCLI1": "./scripts/marsRobotCLI.js",
     "marsRobotAPIServer2": "./scripts/marsRobotApiStartServer.js",
-    "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.mjs"
+    "marsRobotAPIClient3": "./scripts/marsRobotAPIClientMode.mjs",
+    "marsRobotCLI1Interactive": "./scripts/MarsRobotCLIInteractive.js"
   }
 }

@@ -38,11 +38,22 @@ interface RobotOutput {
 export default function MarsRobotSimulator() {
   //sample provided in doc
   const [input, setInput] = useState(`{
-  "terrain": [["Fe", "Fe", "Se"], ["W", "Si", "Obs"]],
-  "battery": 50,
-  "commands": ["F", "S", "R", "F"],
+  "terrain": [
+    ["Fe", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],
+    ["W", "Zn", "Fe", "Se", "Si", "Fe", "Zn", "Fe", "W", "Se", "Zn"],
+    ["Si", "Fe", "Fe", "Zn", "W", "Se", "Si", "Fe", "Zn", "Fe", "Zn"],
+    ["Zn", "Si", "Fe", "W", "Fe", "Zn", "Se", "Fe", "Si", "W", "Zn"],
+    ["Fe", "Fe", "Se", "Zn", "W", "Si", "Fe", "Zn", "Fe", "Se", "Zn"],
+    ["W", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],
+    ["Se", "Zn", "Fe", "W", "Fe", "Si", "Zn", "Fe", "Se", "Fe", "Zn"],
+    ["Obs", "Obs", "Si", "Obs", "W", "Obs", "Obs", "Obs", "Si", "Obs", "Obs"],
+    ["Fe", "Zn", "W", "Si", "Fe", "Se", "Zn", "Fe", "W", "Si", "Zn"],
+    ["Si", "Fe", "Fe", "Zn", "Se", "W", "Si", "Fe", "Fe", "Zn", "Zn"]
+  ],
+  "battery": 5000,
+  "commands": ["F","F","R","F","F","F","F","F","F","R","F","F","R","F","F","F","F","F","R","R","F","F","F","F","F","L","F","F","R","F","F","L","F","F","L","F","F","F","F","F","F","F","F","R","F","F","R","F","F","R","F","F","L","F","F","L","F","F","R","F","F","R","F","F","L","F","F","L","F","F","F","F","L","F","F", "R","F","F","L","F","F","F","L","F","F","R","F","F","F","R","F","F"],
   "initialPosition": {
-    "location": {"x": 0, "y": 0},
+    "location": { "x": 0, "y": 0 },
     "facing": "East"
   }
 }`)
@@ -134,7 +145,7 @@ export default function MarsRobotSimulator() {
   // ended up not using this, this was silly approach just do it in line
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container mx-auto p-6 max-w-full">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Mars Robot Challenge Simulator</h1>
         <p className="text-gray-600">
