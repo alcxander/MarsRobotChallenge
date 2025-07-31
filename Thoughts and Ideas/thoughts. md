@@ -258,3 +258,6 @@ Sample CURL Command for Windows works well if you run in same folder otherwise u
 curl.exe -X POST http://localhost:3000/api/simulate -H "Content-Type: application/json" -d @sample-input.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
 
 and if i run one of the other commands it works just fine
+
+
+Mobbin used images for design
