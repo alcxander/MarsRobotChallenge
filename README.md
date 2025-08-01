@@ -11,6 +11,9 @@ Includes a basic HTTP server, CLI access with secondary interactivity, a simple 
 - Interactive CLI mode
 - Small web front end
 - Automated tests & coverage
+- Random seed generation for custom paths
+- Multiple controls on web UI
+- Secondary API end point for stepped controls
 
 ---
 
