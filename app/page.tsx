@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -77,8 +77,6 @@ export default function MarsRobotSimulator() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const [commandInputCount, setcommandInputCount] = useState<number>(0);
-
   // Step-by-step mode state
   const [stepMode, setStepMode] = useState<"batch" | "step">("batch")
   const [stepResult, setStepResult] = useState<StepResult | null>(null)
@@ -86,6 +84,23 @@ export default function MarsRobotSimulator() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [playInterval, setPlayInterval] = useState<NodeJS.Timeout | null>(null)
   const [manualCommand, setManualCommand] = useState<string>("")
+
+  useEffect(() => {
+    return () => {
+      if (playInterval) {
+        clearInterval(playInterval)
+      }
+    }
+  }, [playInterval])
+
+  // stop auto-play when simulation completes
+  useEffect(() => {
+    if (stepResult?.completed && isPlaying && playInterval) {
+      clearInterval(playInterval)
+      setPlayInterval(null)
+      setIsPlaying(false)
+    }
+  }, [stepResult?.completed, isPlaying, playInterval]) 
   
   const handleSimulate = async () => {
     setLoading(true)
@@ -98,7 +113,6 @@ export default function MarsRobotSimulator() {
       const count = parsedInput.commands.filter(
         cmd => cmd === 'S'
       ).length;
-      setcommandInputCount(count);
 
       const response = await fetch("/api/simulate", {
         method: "POST",
@@ -156,13 +170,16 @@ export default function MarsRobotSimulator() {
     if (!stepResult) return
 
     try {
-      console.log("input:", JSON.stringify(input));
       const parsedInput: RobotInput = JSON.parse(input)
-      console.log("input:", parsedInput);
-
       const command = commandOverride || parsedInput.commands[currentStep]
 
       if (!command && !commandOverride) {
+        // set interval values to complete the steps
+        if (playInterval) {
+          clearInterval(playInterval)
+          setPlayInterval(null)
+          setIsPlaying(false)
+        }
         return
       }
 
@@ -188,8 +205,22 @@ export default function MarsRobotSimulator() {
       setStepResult(result)
       setCurrentStep((prev) => prev + 1)
       setManualCommand("")
+
+      // putting another guard here for checking the auto run
+      if (result.completed && playInterval) {
+        clearInterval(playInterval)
+        setPlayInterval(null)
+        setIsPlaying(false)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
+
+      //edge case to auto play on error
+      if (playInterval) {
+        clearInterval(playInterval)
+        setPlayInterval(null)
+        setIsPlaying(false)
+      }
     }
   }
 
@@ -201,14 +232,100 @@ export default function MarsRobotSimulator() {
       }
       setIsPlaying(false)
     } else {
+      if (!stepResult || stepResult.completed) {
+        return // Don't start if no step result or simulation is completed
+      }
+
       setIsPlaying(true)
       const interval = setInterval(() => {
-        executeStep()
+        // Use a callback to get the latest state
+        setCurrentStep((currentStepValue) => {
+          setStepResult((currentStepResult) => {
+            if (!currentStepResult || currentStepResult.completed) {
+              clearInterval(interval)
+              setPlayInterval(null)
+              setIsPlaying(false)
+              return currentStepResult
+            }
+
+            try {
+              const parsedInput: RobotInput = JSON.parse(input)
+              const command = parsedInput.commands[currentStepValue]
+
+              if (!command) {
+                // No more commands, stop auto-play
+                clearInterval(interval)
+                setPlayInterval(null)
+                setIsPlaying(false)
+                return currentStepResult
+              }
+
+              // Execute the step asynchronously
+              executeStepAsync(currentStepValue, currentStepResult, interval)
+              return currentStepResult
+            } catch (error) {
+              console.error("Auto-play error:", error)
+              clearInterval(interval)
+              setPlayInterval(null)
+              setIsPlaying(false)
+              return currentStepResult
+            }
+          })
+          return currentStepValue
+        })
       }, 1500)
       setPlayInterval(interval)
     }
   }
 
+  const executeStepAsync = async (stepIndex: number, currentStepResult: StepResult, interval: NodeJS.Timeout) => {
+    try {
+      const parsedInput: RobotInput = JSON.parse(input)
+      const command = parsedInput.commands[stepIndex]
+
+      if (!command) {
+        clearInterval(interval)
+        setPlayInterval(null)
+        setIsPlaying(false)
+        return
+      }
+
+      const response = await fetch("/api/simulate/step", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...parsedInput,
+          step: stepIndex + 1,
+          currentState: currentStepResult,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Step execution failed")
+      }
+
+      const result: StepResult = await response.json()
+      setStepResult(result)
+      setCurrentStep(stepIndex + 1)
+
+      // Check if simulation is completed and stop auto-play
+      if (result.completed) {
+        clearInterval(interval)
+        setPlayInterval(null)
+        setIsPlaying(false)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+      clearInterval(interval)
+      setPlayInterval(null)
+      setIsPlaying(false)
+    }
+  }
+
+  // classic ai issues, leaving this in as an observation that sometimes AI gives you things it ends up not using which requires vigilance
   const resetStepMode = () => {
     if (playInterval) {
       clearInterval(playInterval)
