@@ -85,6 +85,70 @@ export default function MarsRobotSimulator() {
   const [playInterval, setPlayInterval] = useState<NodeJS.Timeout | null>(null)
   const [manualCommand, setManualCommand] = useState<string>("")
 
+  const generateRandomInput = () => {
+    // Terrain types
+    const terrainTypes = ["Fe", "Se", "W", "Si", "Zn", "Obs"]
+
+    // Generate random terrain size (3x3 to 6x6)
+    const width = Math.floor(Math.random() * 4) + 3 // 3-6
+    const height = Math.floor(Math.random() * 4) + 3 // 3-6
+
+    // Generate terrain grid
+    const terrain: string[][] = []
+    for (let y = 0; y < height; y++) {
+      const row: string[] = []
+      for (let x = 0; x < width; x++) {
+        // Reduce obstacle probability to ensure navigable terrain
+        const isObstacle = Math.random() < 0.15 // 15% chance of obstacle
+        if (isObstacle) {
+          row.push("Obs")
+        } else {
+          const randomTerrain = terrainTypes[Math.floor(Math.random() * (terrainTypes.length - 1))] // Exclude "Obs" from random selection
+          row.push(randomTerrain)
+        }
+      }
+      terrain.push(row)
+    }
+
+    // Generate random initial position (ensure it's not on an obstacle)
+    let initialX: number, initialY: number
+    do {
+      initialX = Math.floor(Math.random() * width)
+      initialY = Math.floor(Math.random() * height)
+    } while (terrain[initialY][initialX] === "Obs")
+
+    // Generate random facing direction
+    const facingDirections = ["North", "East", "South", "West"]
+    const facing = facingDirections[Math.floor(Math.random() * facingDirections.length)]
+
+    // Generate random battery (10-999)
+    const battery = Math.floor(Math.random() * 990) + 10
+
+    // Generate random commands (3-12 commands)
+    const commandTypes = ["F", "B", "L", "R", "S", "E"]
+    const commandCount = Math.floor(Math.random() * 10) + 3 // 3-12 commands
+    const commands: string[] = []
+
+    for (let i = 0; i < commandCount; i++) {
+      const randomCommand = commandTypes[Math.floor(Math.random() * commandTypes.length)]
+      commands.push(randomCommand)
+    }
+
+    // Create the input object
+    const randomInput = {
+      terrain,
+      battery,
+      commands,
+      initialPosition: {
+        location: { x: initialX, y: initialY },
+        facing,
+      },
+    }
+
+    // Update the input textarea
+    setInput(JSON.stringify(randomInput, null, 2))
+  }
+
   useEffect(() => {
     return () => {
       if (playInterval) {
@@ -413,6 +477,11 @@ export default function MarsRobotSimulator() {
                 <CardDescription>Define the terrain, battery level, commands, and starting position</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="flex gap-2 mb-2">
+                  <Button onClick={generateRandomInput} variant="outline" className="flex-1 bg-transparent">
+                    🎲 Generate Random Input
+                  </Button>
+                </div>
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -501,6 +570,11 @@ export default function MarsRobotSimulator() {
                 <CardDescription>Control the robot step by step</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="flex gap-2 mb-2">
+                  <Button onClick={generateRandomInput} variant="outline" className="flex-1 bg-transparent">
+                    🎲 Generate Random Input
+                  </Button>
+                </div>
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
