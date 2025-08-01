@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     includeSource: ['scripts/**/*.{js,mjs,ts}'],
+    include: ['tests/**/*.test.ts'],
   },
   esbuild: {
   include: [/scripts\/.*\.(js|mjs)$/],

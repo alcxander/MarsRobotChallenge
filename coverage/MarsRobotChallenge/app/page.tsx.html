@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/343</span>
+                <span class='fraction'>0/354</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/343</span>
+                <span class='fraction'>0/354</span>
             </div>
         
             
@@ -406,7 +406,29 @@
 <a name='L341'></a><a href='#L341'>341</a>
 <a name='L342'></a><a href='#L342'>342</a>
 <a name='L343'></a><a href='#L343'>343</a>
-<a name='L344'></a><a href='#L344'>344</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -789,11 +811,22 @@
 <span class="cstat-no" title="statement not covered" >export default function MarsRobotSimulator() {</span>
 <span class="cstat-no" title="statement not covered" >  //sample provided in doc</span>
 <span class="cstat-no" title="statement not covered" >  const [input, setInput] = useState(`{</span>
-<span class="cstat-no" title="statement not covered" >  "terrain": [["Fe", "Fe", "Se"], ["W", "Si", "Obs"]],</span>
-<span class="cstat-no" title="statement not covered" >  "battery": 50,</span>
-<span class="cstat-no" title="statement not covered" >  "commands": ["F", "S", "R", "F"],</span>
+<span class="cstat-no" title="statement not covered" >  "terrain": [</span>
+<span class="cstat-no" title="statement not covered" >    ["Fe", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["W", "Zn", "Fe", "Se", "Si", "Fe", "Zn", "Fe", "W", "Se", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Si", "Fe", "Fe", "Zn", "W", "Se", "Si", "Fe", "Zn", "Fe", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Zn", "Si", "Fe", "W", "Fe", "Zn", "Se", "Fe", "Si", "W", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Fe", "Fe", "Se", "Zn", "W", "Si", "Fe", "Zn", "Fe", "Se", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["W", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Se", "Zn", "Fe", "W", "Fe", "Si", "Zn", "Fe", "Se", "Fe", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Obs", "Obs", "Si", "Obs", "W", "Obs", "Obs", "Obs", "Si", "Obs", "Obs"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Fe", "Zn", "W", "Si", "Fe", "Se", "Zn", "Fe", "W", "Si", "Zn"],</span>
+<span class="cstat-no" title="statement not covered" >    ["Si", "Fe", "Fe", "Zn", "Se", "W", "Si", "Fe", "Fe", "Zn", "Zn"]</span>
+<span class="cstat-no" title="statement not covered" >  ],</span>
+<span class="cstat-no" title="statement not covered" >  "battery": 5000,</span>
+<span class="cstat-no" title="statement not covered" >  "commands": ["F","F","R","F","F","F","F","F","F","R","F","F","R","F","F","F","F","F","R","R","F","F","F","F","F","L","F","F","R","F","F","L","F","F","L","F","F","F","F","F","F","F","F","R","F","F","R","F","F","R","F","F","L","F","F","L","F","F","R","F","F","R","F","F","L","F","F","L","F","F","F","F","L","F","F", "R","F","F","L","F","F","F","L","F","F","R","F","F","F","R","F","F"],</span>
 <span class="cstat-no" title="statement not covered" >  "initialPosition": {</span>
-<span class="cstat-no" title="statement not covered" >    "location": {"x": 0, "y": 0},</span>
+<span class="cstat-no" title="statement not covered" >    "location": { "x": 0, "y": 0 },</span>
 <span class="cstat-no" title="statement not covered" >    "facing": "East"</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}`)</span>
@@ -885,7 +918,7 @@
 <span class="cstat-no" title="statement not covered" >  // ended up not using this, this was silly approach just do it in line</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="container mx-auto p-6 max-w-6xl"&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div className="container mx-auto p-6 max-w-full"&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;div className="mb-8"&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;h1 className="text-3xl font-bold mb-2"&gt;Mars Robot Challenge Simulator&lt;/h1&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;p className="text-gray-600"&gt;</span>
@@ -1099,7 +1132,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-31T14:46:00.746Z
+                at 2025-08-01T00:47:37.948Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

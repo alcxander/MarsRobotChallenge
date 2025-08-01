@@ -3,6 +3,15 @@
 A simple Node.js project simulating a Mars robot control API.  
 Includes a basic HTTP server, CLI access with secondary interactivity, a simple web front end, sample inputs, and automated tests with coverage reporting.
 
+### Features
+
+- CLI mode
+- REST API server
+- API client
+- Interactive CLI mode
+- Small web front end
+- Automated tests & coverage
+
 ---
 
 ## 🚀 Project Overview
@@ -59,10 +68,17 @@ from here the code should run, you can see the web running on localhost:3000
 ## Test Coverage
 To see tests you can run 
 
-npm run coverage
+npm run test:coverage
 (should run vitest --coverage in the background)
 
-after running you'll see
+after running you'll see something like:
+
+Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  01:47:19    
+   Duration  8.99s (transform 325ms, setup 0ms, collect 529ms, tests 2.44s, environment 1ms, prepare 2.50s)
+
+ % Coverage report from v8
 
 -----------------|---------|----------|---------|---------|-------------------
 File             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s

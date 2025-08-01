@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>64/64</span>
+                <span class='fraction'>0/64</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>64/64</span>
+                <span class='fraction'>0/64</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -127,134 +127,134 @@
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import fs from "fs/promises";
-import chalk from "chalk";
-import { simulateRobot } from "../dist/robot-simulator.js";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const pkg = require("../package.json");
-&nbsp;
-export async function runCli(argv, {
-  fsModule = fs,
-  consoleModule = console,
-  exit = process.exit,
-} = {}) {
-  const usage = `
-${chalk.green.bold('Usage:')}
-  marsRobot &lt;input.json&gt; &lt;output.json&gt;
-&nbsp;
-${chalk.green.bold('Description:')}
-  Reads the JSON input file, simulates the Mars robot, and writes the output JSON.
-&nbsp;
-${chalk.green.bold('Examples:')}
-  marsRobot sample-input.json output.json
-&nbsp;
-${chalk.green.bold('Options:')}
-  -h, --help       Show help message
-  -v, --version    Show version
-`;
-&nbsp;
-  const args = argv.slice(2);
-&nbsp;
-  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
-    consoleModule.log(usage);
-    exit(0);
-    return;
-  }
-&nbsp;
-  if (args.includes("--version") || args.includes("-v")) {
-    consoleModule.log(chalk.blue(`marsRobot version: ${pkg.version}`));
-    exit(0);
-    return;
-  }
-&nbsp;
-  if (args.length !== 2) {
-    consoleModule.error(chalk.red("Incorrect number of arguments"), " expected, see below usage:");
-    consoleModule.log(usage);
-    exit(0);
-    return;
-  }
-&nbsp;
-  const [inputPath, outputPath] = args;
-&nbsp;
-  try {
-    const inputJson = await fsModule.readFile(inputPath, "utf8");
-    const input = JSON.parse(inputJson);
-&nbsp;
-    const output = simulateRobot(input);
-    consoleModule.log(chalk.cyan("Simulation complete. Output:"), output);
-&nbsp;
-    await fsModule.writeFile(outputPath, JSON.stringify(output, null, 2));
-    consoleModule.log(chalk.green("Done. Output written to: "), chalk.bold(outputPath));
-  } catch (e) {
-    consoleModule.error(chalk.red("Error:"), e.message);
-    exit(1);
-  }
-}
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import fs from "fs/promises";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cstat-no" title="statement not covered" >import chalk from "chalk";</span>
+<span class="cstat-no" title="statement not covered" >import { simulateRobot } from "../dist/robot-simulator.js";</span>
+<span class="cstat-no" title="statement not covered" >import { createRequire } from "module";</span>
+<span class="cstat-no" title="statement not covered" >const require = createRequire(import.meta.url);</span>
+<span class="cstat-no" title="statement not covered" >const pkg = require("../package.json");</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export async function runCli(argv, {</span>
+<span class="cstat-no" title="statement not covered" >  fsModule = fs,</span>
+<span class="cstat-no" title="statement not covered" >  consoleModule = console,</span>
+<span class="cstat-no" title="statement not covered" >  exit = process.exit,</span>
+<span class="cstat-no" title="statement not covered" >} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >  const usage = `</span>
+<span class="cstat-no" title="statement not covered" >${chalk.green.bold('Usage:')}</span>
+<span class="cstat-no" title="statement not covered" >  marsRobot &lt;input.json&gt; &lt;output.json&gt;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >${chalk.green.bold('Description:')}</span>
+<span class="cstat-no" title="statement not covered" >  Reads the JSON input file, simulates the Mars robot, and writes the output JSON.</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >${chalk.green.bold('Examples:')}</span>
+<span class="cstat-no" title="statement not covered" >  marsRobot sample-input.json output.json</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >${chalk.green.bold('Options:')}</span>
+<span class="cstat-no" title="statement not covered" >  -h, --help       Show help message</span>
+<span class="cstat-no" title="statement not covered" >  -v, --version    Show version</span>
+<span class="cstat-no" title="statement not covered" >`;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const args = argv.slice(2);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.log(usage);</span>
+<span class="cstat-no" title="statement not covered" >    exit(0);</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (args.includes("--version") || args.includes("-v")) {</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.log(chalk.blue(`marsRobot version: ${pkg.version}`));</span>
+<span class="cstat-no" title="statement not covered" >    exit(0);</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (args.length !== 2) {</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.error(chalk.red("Incorrect number of arguments"), " expected, see below usage:");</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.log(usage);</span>
+<span class="cstat-no" title="statement not covered" >    exit(0);</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const [inputPath, outputPath] = args;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    const inputJson = await fsModule.readFile(inputPath, "utf8");</span>
+<span class="cstat-no" title="statement not covered" >    const input = JSON.parse(inputJson);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const output = simulateRobot(input);</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.log(chalk.cyan("Simulation complete. Output:"), output);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await fsModule.writeFile(outputPath, JSON.stringify(output, null, 2));</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.log(chalk.green("Done. Output written to: "), chalk.bold(outputPath));</span>
+<span class="cstat-no" title="statement not covered" >  } catch (e) {</span>
+<span class="cstat-no" title="statement not covered" >    consoleModule.error(chalk.red("Error:"), e.message);</span>
+<span class="cstat-no" title="statement not covered" >    exit(1);</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -262,7 +262,7 @@ ${chalk.green.bold('Options:')}
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-31T14:46:00.746Z
+                at 2025-08-01T00:47:37.948Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
