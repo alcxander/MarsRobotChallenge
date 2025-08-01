@@ -50,29 +50,15 @@ interface StepResult {
 }
 
 export default function MarsRobotSimulator() {
-  //sample provided in doc
   const [input, setInput] = useState(`{
-  "terrain": [
-    ["Fe", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],
-    ["W", "Zn", "Fe", "Se", "Si", "Fe", "Zn", "Fe", "W", "Se", "Zn"],
-    ["Si", "Fe", "Fe", "Zn", "W", "Se", "Si", "Fe", "Zn", "Fe", "Zn"],
-    ["Zn", "Si", "Fe", "W", "Fe", "Zn", "Se", "Fe", "Si", "W", "Zn"],
-    ["Fe", "Fe", "Se", "Zn", "W", "Si", "Fe", "Zn", "Fe", "Se", "Zn"],
-    ["W", "Si", "Zn", "Fe", "Se", "Fe", "W", "Si", "Zn", "Fe", "Zn"],
-    ["Se", "Zn", "Fe", "W", "Fe", "Si", "Zn", "Fe", "Se", "Fe", "Zn"],
-    ["Obs", "Obs", "Si", "Obs", "W", "Obs", "Obs", "Obs", "Si", "Obs", "Obs"],
-    ["Fe", "Zn", "W", "Si", "Fe", "Se", "Zn", "Fe", "W", "Si", "Zn"],
-    ["Si", "Fe", "Fe", "Zn", "Se", "W", "Si", "Fe", "Fe", "Zn", "Zn"]
-  ],
-  "battery": 5000,
-  "commands": ["F","F","R","F","F","F","F","F","F","R","F","F","R","F","F","F","F","F","R","R","F","F","F","F","F","L","F","F","R","F","F","L","F","F","L","F","F","F","F","F","F","F","F","R","F","F","R","F","F","R","F","F","L","F","F","L","F","F","R","F","F","R","F","F","L","F","F","L","F","F","F","F","L","F","F", "R","F","F","L","F","F","F","L","F","F","R","F","F","F","R","F","F"],
+  "terrain": [["Fe", "Fe", "Se"], ["W", "Si", "Obs"]],
+  "battery": 50,
+  "commands": ["F", "S", "R", "F"],
   "initialPosition": {
-    "location": { "x": 0, "y": 0 },
+    "location": {"x": 0, "y": 0},
     "facing": "East"
   }
 }`)
-
-  //let's use state to map things out on the front end
   const [output, setOutput] = useState<RobotOutput | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -149,6 +135,7 @@ export default function MarsRobotSimulator() {
     setInput(JSON.stringify(randomInput, null, 2))
   }
 
+  // Add this useEffect after the state declarations
   useEffect(() => {
     return () => {
       if (playInterval) {
@@ -157,15 +144,15 @@ export default function MarsRobotSimulator() {
     }
   }, [playInterval])
 
-  // stop auto-play when simulation completes
+  // Also add this useEffect to stop auto-play when simulation completes
   useEffect(() => {
     if (stepResult?.completed && isPlaying && playInterval) {
       clearInterval(playInterval)
       setPlayInterval(null)
       setIsPlaying(false)
     }
-  }, [stepResult?.completed, isPlaying, playInterval]) 
-  
+  }, [stepResult?.completed, isPlaying, playInterval])
+
   const handleSimulate = async () => {
     setLoading(true)
     setError(null)
@@ -173,10 +160,6 @@ export default function MarsRobotSimulator() {
 
     try {
       const parsedInput: RobotInput = JSON.parse(input)
-
-      const count = parsedInput.commands.filter(
-        cmd => cmd === 'S'
-      ).length;
 
       const response = await fetch("/api/simulate", {
         method: "POST",
@@ -192,6 +175,7 @@ export default function MarsRobotSimulator() {
       }
 
       const result: RobotOutput = await response.json()
+      console.log("Simulation result:", result) // Debug log
       setOutput(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
@@ -201,13 +185,11 @@ export default function MarsRobotSimulator() {
   }
 
   const initializeStepMode = async () => {
-    //todo put in fallback
     setError(null)
     setStepResult(null)
     setCurrentStep(0)
 
     try {
-      //todo put better handler in
       const parsedInput: RobotInput = JSON.parse(input)
 
       const response = await fetch("/api/simulate/step", {
@@ -238,7 +220,7 @@ export default function MarsRobotSimulator() {
       const command = commandOverride || parsedInput.commands[currentStep]
 
       if (!command && !commandOverride) {
-        // set interval values to complete the steps
+        // No more commands, mark as completed
         if (playInterval) {
           clearInterval(playInterval)
           setPlayInterval(null)
@@ -270,7 +252,7 @@ export default function MarsRobotSimulator() {
       setCurrentStep((prev) => prev + 1)
       setManualCommand("")
 
-      // putting another guard here for checking the auto run
+      // Check if simulation is completed and stop auto-play
       if (result.completed && playInterval) {
         clearInterval(playInterval)
         setPlayInterval(null)
@@ -278,8 +260,7 @@ export default function MarsRobotSimulator() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
-
-      //edge case to auto play on error
+      // Stop auto-play on error
       if (playInterval) {
         clearInterval(playInterval)
         setPlayInterval(null)
@@ -342,6 +323,7 @@ export default function MarsRobotSimulator() {
     }
   }
 
+  // Add this new async function after toggleAutoPlay
   const executeStepAsync = async (stepIndex: number, currentStepResult: StepResult, interval: NodeJS.Timeout) => {
     try {
       const parsedInput: RobotInput = JSON.parse(input)
@@ -389,7 +371,6 @@ export default function MarsRobotSimulator() {
     }
   }
 
-  // classic ai issues, leaving this in as an observation that sometimes AI gives you things it ends up not using which requires vigilance
   const resetStepMode = () => {
     if (playInterval) {
       clearInterval(playInterval)
@@ -406,11 +387,61 @@ export default function MarsRobotSimulator() {
   }
 
   const renderTerrain = (terrain: string[][], visitedCells: Position[], currentPosition: Position, facing?: string) => {
+    if (!terrain || terrain.length === 0) {
+      return <p className="text-gray-500 text-sm">No terrain data available</p>
+    }
+
+    const maxCellsToShow = 20 // Increased limit
+    const shouldTruncate = terrain.length > maxCellsToShow || terrain[0]?.length > maxCellsToShow
+
+    if (shouldTruncate) {
+      return (
+        <div className="space-y-2">
+          <p className="text-sm text-gray-600">
+            Terrain too large to display ({terrain[0]?.length}x{terrain.length}). Showing summary:
+          </p>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <strong>Terrain Size:</strong> {terrain[0]?.length} x {terrain.length}
+            </div>
+            <div>
+              <strong>Total Cells:</strong> {terrain.length * (terrain[0]?.length || 0)}
+            </div>
+            <div>
+              <strong>Robot Position:</strong> ({currentPosition.x}, {currentPosition.y})
+            </div>
+            <div>
+              <strong>Robot Facing:</strong> {facing || "Unknown"}
+            </div>
+            <div>
+              <strong>Visited Cells:</strong> {visitedCells.length}
+            </div>
+            <div>
+              <strong>Path Preview:</strong>
+              <div className="text-xs mt-1 max-h-20 overflow-y-auto bg-gray-100 p-1 rounded">
+                {visitedCells.slice(0, 10).map((cell, i) => (
+                  <span key={i} className="inline-block bg-blue-100 px-1 mr-1 mb-1 rounded">
+                    ({cell.x},{cell.y})
+                  </span>
+                ))}
+                {visitedCells.length > 10 && (
+                  <span className="text-gray-500">...and {visitedCells.length - 10} more</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
-      <div className="grid gap-1 p-4 bg-gray-50 rounded-lg">
-        {terrain.map((row, y) => (
-          <div key={y} className="flex gap-1">
-            {row.map((cell, x) => {
+      <div className="max-w-full overflow-auto">
+        <div
+          className="grid gap-0.5 p-2 bg-gray-50 rounded-lg inline-block min-w-fit"
+          style={{ gridTemplateColumns: `repeat(${terrain[0]?.length || 0}, minmax(0, 1fr))` }}
+        >
+          {terrain.map((row, y) =>
+            row.map((cell, x) => {
               const isVisited = visitedCells.some((pos) => pos.x === x && pos.y === y)
               const isCurrent = currentPosition.x === x && currentPosition.y === y
 
@@ -432,30 +463,31 @@ export default function MarsRobotSimulator() {
               return (
                 <div
                   key={`${x}-${y}`}
-                  className={`w-12 h-12 flex items-center justify-center text-xs font-bold border rounded ${
+                  className={`w-6 h-6 flex items-center justify-center text-xs font-bold border border-gray-300 ${
                     isCurrent
-                      ? "bg-red-500 text-white" //remove final position logic and just default the behaviour to this instead, final can now mean middle of execution
+                      ? "bg-red-500 text-white border-red-600"
                       : isVisited
-                        ? "bg-blue-200 border-blue-400"
+                        ? "bg-blue-200 border-blue-400 text-blue-800"
                         : cell === "Obs"
                           ? "bg-gray-800 text-white"
                           : cell === "Sa"
                             ? "bg-yellow-600 text-white"
-                            : "bg-white border-gray-300"
+                            : "bg-white"
                   }`}
+                  title={`(${x},${y}): ${cell}${isCurrent ? ` - Robot facing ${facing}` : ""}${isVisited ? " - Visited" : ""}`}
                 >
-                  {isCurrent ? getFacingIcon() : cell}
+                  {isCurrent ? getFacingIcon() : cell === "Obs" ? "█" : cell === "Sa" ? "~" : cell}
                 </div>
               )
-            })}
-          </div>
-        ))}
+            }),
+          )}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-8xl">
+    <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Mars Robot Challenge Simulator</h1>
         <p className="text-gray-600">
@@ -515,8 +547,9 @@ export default function MarsRobotSimulator() {
                       <div>
                         <h4 className="font-semibold mb-2">Final Position</h4>
                         <p className="text-sm">
-                          ({output.FinalPosition.Location.x}, {output.FinalPosition.Location.y}) facing{" "}
-                          {output.FinalPosition.Facing}
+                          ({output.FinalPosition?.Location?.x ?? output.FinalPosition?.Location?.x ?? "N/A"},{" "}
+                          {output.FinalPosition?.Location?.y ?? output.FinalPosition?.Location?.y ?? "N/A"}) facing{" "}
+                          {output.FinalPosition?.Facing ?? "Unknown"}
                         </p>
                       </div>
                     </div>
@@ -524,9 +557,9 @@ export default function MarsRobotSimulator() {
                     <Separator />
 
                     <div>
-                      <h4 className="font-semibold mb-2">Samples Collected</h4>
+                      <h4 className="font-semibold mb-2">Samples Collected ({output.SamplesCollected?.length || 0})</h4>
                       <div className="flex flex-wrap gap-2">
-                        {output.SamplesCollected.length > 0 ? (
+                        {output.SamplesCollected && output.SamplesCollected.length > 0 ? (
                           output.SamplesCollected.map((sample, index) => (
                             <Badge key={index} variant="secondary">
                               {sample}
@@ -541,11 +574,44 @@ export default function MarsRobotSimulator() {
                     <Separator />
 
                     <div>
+                      <h4 className="font-semibold mb-2">Visited Cells ({output.VisitedCells?.length || 0})</h4>
+                      <div className="max-h-32 overflow-y-auto bg-gray-50 p-2 rounded text-xs">
+                        {output.VisitedCells && output.VisitedCells.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {output.VisitedCells.map((cell, index) => (
+                              <span key={index} className="bg-blue-100 px-1 rounded">
+                                ({cell.x ?? cell.x}, {cell.y ?? cell.y})
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500">No cells visited</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
                       <h4 className="font-semibold mb-2">Terrain Visualization</h4>
                       {(() => {
                         try {
                           const parsedInput: RobotInput = JSON.parse(input)
-                          return renderTerrain(parsedInput.terrain, output.VisitedCells, output.FinalPosition.Location)
+                          // Convert API response format (X,Y) to internal format (x,y)
+                          const visitedCells = (output.VisitedCells || []).map((cell) => ({
+                            x: cell.x ?? cell.x ?? 0,
+                            y: cell.y ?? cell.y ?? 0,
+                          }))
+                          const finalPosition = {
+                            x: output.FinalPosition?.Location?.x ?? output.FinalPosition?.Location?.x ?? 0,
+                            y: output.FinalPosition?.Location?.y ?? output.FinalPosition?.Location?.y ?? 0,
+                          }
+                          return renderTerrain(
+                            parsedInput.terrain,
+                            visitedCells,
+                            finalPosition,
+                            output.FinalPosition?.Facing,
+                          )
                         } catch {
                           return <p className="text-gray-500 text-sm">Unable to render terrain</p>
                         }
@@ -571,7 +637,7 @@ export default function MarsRobotSimulator() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-2 mb-2">
-                  <Button onClick={generateRandomInput} variant="outline" className="flex-1 bg-transparent">
+                  <Button onClick={generateRandomInput} variant="outline" className="w-full bg-transparent">
                     🎲 Generate Random Input
                   </Button>
                 </div>
@@ -654,7 +720,7 @@ export default function MarsRobotSimulator() {
                     <div>
                       <h4 className="font-semibold mb-2">Position & Facing</h4>
                       <p className="text-sm">
-                        ({stepResult.position.x}, {stepResult.position.y}) facing {stepResult.facing} 
+                        ({stepResult.position.x}, {stepResult.position.y}) facing {stepResult.facing}
                       </p>
                     </div>
 
@@ -694,7 +760,7 @@ export default function MarsRobotSimulator() {
               </CardHeader>
               <CardContent>
                 {stepResult ? (
-                  <div className="space-y-4 overflow-x-auto">
+                  <div className="space-y-4">
                     {renderTerrain(stepResult.terrain, stepResult.visitedCells, stepResult.position, stepResult.facing)}
 
                     <div>

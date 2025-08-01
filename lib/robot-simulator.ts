@@ -13,6 +13,7 @@ export interface RobotInput {
   battery: number
   commands: string[]
   initialPosition: InitialPosition
+  seed?: number // Add optional seed for deterministic behavior
 }
 
 export interface RobotOutput {
@@ -28,6 +29,20 @@ export interface RobotOutput {
 export type Direction = "North" | "East" | "South" | "West"
 export type TerrainType = "Fe" | "Se" | "W" | "Si" | "Zn" | "Obs" | "Sa"
 export type Command = "F" | "B" | "L" | "R" | "S" | "E"
+
+// Simple seeded random number generator for deterministic behavior
+class SeededRandom {
+  private seed: number
+
+  constructor(seed: number) {
+    this.seed = seed
+  }
+
+  next(): number {
+    this.seed = (this.seed * 9301 + 49297) % 233280
+    return this.seed / 233280
+  }
+}
 
 export class MarsRobot {
   private position: Position
@@ -48,17 +63,40 @@ export class MarsRobot {
 
   private readonly sandDropProbability = 0.15 // 15% chance after each move
   private simulationLog: string[] = []
+  private seededRandom: SeededRandom
+  private moveCount = 0
 
   constructor(input: RobotInput) {
     this.position = { ...input.initialPosition.location }
     this.facing = input.initialPosition.facing as Direction
     this.battery = input.battery
-    this.terrain = input.terrain
+    this.terrain = input.terrain.map((row) => [...row]) // Deep copy to avoid mutations
     this.visitedCells = [{ ...this.position }]
     this.samplesCollected = []
 
-    //no longer does anything, misunderstood an instruction
-    //this.collectSampleAtCurrentPosition(); 
+    // Use provided seed or generate one based on input for deterministic behavior
+    const seed = input.seed || this.generateSeedFromInput(input)
+    this.seededRandom = new SeededRandom(seed)
+    this.simulationLog.push(`Simulation started with seed: ${seed}`)
+  }
+
+  private generateSeedFromInput(input: RobotInput): number {
+    // Generate a consistent seed based on input data
+    let hash = 0
+    const str = JSON.stringify({
+      terrain: input.terrain,
+      battery: input.battery,
+      commands: input.commands,
+      initialPosition: input.initialPosition,
+    })
+
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash = hash & hash // Convert to 32-bit integer
+    }
+
+    return Math.abs(hash)
   }
 
   private getDirectionVector(direction: Direction): Position {
@@ -93,7 +131,7 @@ export class MarsRobot {
       pos.y >= 0 &&
       pos.y < this.terrain.length &&
       this.terrain[pos.y][pos.x] !== "Obs" &&
-      this.terrain[pos.y][pos.x] !== "Sa"      
+      this.terrain[pos.y][pos.x] !== "Sa"
     )
   }
 
@@ -117,7 +155,10 @@ export class MarsRobot {
   private executeCommand(command: Command): boolean {
     switch (command) {
       case "F":
-        if (!this.consumeBattery(3)) return false
+        if (!this.consumeBattery(3)) {
+          this.simulationLog.push(`Insufficient battery for forward movement (need 3, have ${this.battery})`)
+          return false
+        }
         const nextPosF = this.getNextPosition(true)
         if (this.isValidPosition(nextPosF)) {
           this.position = nextPosF
@@ -126,62 +167,86 @@ export class MarsRobot {
           this.dropRandomSand()
           return true
         } else {
+          this.simulationLog.push(`Forward movement blocked, attempting backoff strategy`)
           return this.executeBackoffStrategy()
         }
 
       case "B":
-        if (!this.consumeBattery(3)) return false
+        if (!this.consumeBattery(3)) {
+          this.simulationLog.push(`Insufficient battery for backward movement (need 3, have ${this.battery})`)
+          return false
+        }
         const nextPosB = this.getNextPosition(false)
         if (this.isValidPosition(nextPosB)) {
           this.position = nextPosB
           this.addVisitedCell(this.position)
-          this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+          this.simulationLog.push(`Moved backward to (${this.position.x}, ${this.position.y})`)
           this.dropRandomSand()
           return true
         } else {
+          this.simulationLog.push(`Backward movement blocked, attempting backoff strategy`)
           return this.executeBackoffStrategy()
         }
 
       case "L":
-        if (!this.consumeBattery(2)) return false
+        if (!this.consumeBattery(2)) {
+          this.simulationLog.push(`Insufficient battery for left turn (need 2, have ${this.battery})`)
+          return false
+        }
         this.turnLeft()
-        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+        this.simulationLog.push(`Turned left, now facing ${this.facing}`)
         return true
 
       case "R":
-        if (!this.consumeBattery(2)) return false
+        if (!this.consumeBattery(2)) {
+          this.simulationLog.push(`Insufficient battery for right turn (need 2, have ${this.battery})`)
+          return false
+        }
         this.turnRight()
-        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+        this.simulationLog.push(`Turned right, now facing ${this.facing}`)
         return true
 
       case "S":
-        if (!this.consumeBattery(8)) return false
-        // explicit collect only
+        if (!this.consumeBattery(8)) {
+          this.simulationLog.push(`Insufficient battery for sampling (need 8, have ${this.battery})`)
+          return false
+        }
         const currentTerrain = this.terrain[this.position.y][this.position.x]
-        if (currentTerrain !== "Obs") {
+        if (currentTerrain !== "Obs" && currentTerrain !== "Sa") {
           this.samplesCollected.push(currentTerrain)
-          this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+          this.simulationLog.push(`Collected sample: ${currentTerrain}`)
+        } else {
+          this.simulationLog.push(`Cannot sample from ${currentTerrain}`)
         }
         return true
 
       case "E":
-        if (!this.consumeBattery(1)) return false
+        if (!this.consumeBattery(1)) {
+          this.simulationLog.push(`Insufficient battery for solar panels (need 1, have ${this.battery})`)
+          return false
+        }
         this.battery += 10
-        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
-        this.dropRandomSand()
+        this.simulationLog.push(`Extended solar panels, battery now: ${this.battery}`)
         return true
 
       default:
+        this.simulationLog.push(`Unknown command: ${command}`)
         return false
     }
   }
 
   private executeBackoffStrategy(): boolean {
-    for (const strategy of this.backoffStrategies) {
+    this.simulationLog.push(`Executing backoff strategies...`)
+
+    for (let i = 0; i < this.backoffStrategies.length; i++) {
+      const strategy = this.backoffStrategies[i]
       const originalPosition = { ...this.position }
       const originalFacing = this.facing
       const originalBattery = this.battery
+      const originalTerrain = this.terrain.map((row) => [...row])
       let strategySuccessful = true
+
+      this.simulationLog.push(`Trying backoff strategy ${i + 1}: [${strategy.join(", ")}]`)
 
       for (const command of strategy) {
         if (!this.executeCommand(command)) {
@@ -191,6 +256,7 @@ export class MarsRobot {
       }
 
       if (strategySuccessful) {
+        this.simulationLog.push(`Backoff strategy ${i + 1} successful`)
         return true
       }
 
@@ -198,8 +264,11 @@ export class MarsRobot {
       this.position = originalPosition
       this.facing = originalFacing
       this.battery = originalBattery
+      this.terrain = originalTerrain
+      this.simulationLog.push(`Backoff strategy ${i + 1} failed, restoring state`)
     }
 
+    this.simulationLog.push(`All backoff strategies failed`)
     return false
   }
 
@@ -211,26 +280,29 @@ export class MarsRobot {
   }
 
   public simulate(commands: Command[]): RobotOutput {
-    for (const command of commands) {
+    this.simulationLog.push(`Starting simulation with ${commands.length} commands`)
+
+    for (let i = 0; i < commands.length; i++) {
+      const command = commands[i]
+      this.simulationLog.push(`Step ${i + 1}: Executing command '${command}' (Battery: ${this.battery})`)
+
       // Check if we can execute the command
       const requiredBattery = this.getRequiredBattery(command)
 
       // If we don't have enough battery but can extend solar panels, do it automatically
-      // The battery should never get to a state where it goes to 1 or 2 and causes boundary
-      // issues. If we encounter any issue we'll just break out of the loop.
-
       if (this.battery < requiredBattery && this.battery >= 1) {
+        this.simulationLog.push("Auto-extending solar panels due to low battery")
         this.executeCommand("E")
       }
 
       // Try to execute the command
       if (!this.executeCommand(command)) {
-        // If we still can't execute, stop simulation
+        this.simulationLog.push(`Simulation stopped at step ${i + 1} due to failed command execution`)
         break
       }
     }
 
-    return {
+    const result = {
       VisitedCells: this.visitedCells.map((cell) => ({ x: cell.x, y: cell.y })),
       SamplesCollected: [...this.samplesCollected],
       Battery: this.battery,
@@ -239,6 +311,9 @@ export class MarsRobot {
         Facing: this.facing,
       },
     }
+
+    this.simulationLog.push(`Simulation completed. Final state: ${JSON.stringify(result)}`)
+    return result
   }
 
   private getRequiredBattery(command: Command): number {
@@ -258,28 +333,11 @@ export class MarsRobot {
     }
   }
 
-  // EXAMPLE of incorrect assumption here, that's what happens when you are 2/3 thoughts deep and get
-  // distracted on another problem. left this in now as a sign of what happened previously.
-  //I feel like we are not collecting samples correctly, let's put in get sample at currentLocation 
-  // for first iteration of the engine as it's not being picked up
-
-  private collectSampleAtCurrentPosition(): void {
-    // const currentTerrain = this.terrain[this.position.y][this.position.x]
-    // if (currentTerrain !== "Obs") //which shouldn't happen because we have a filter to stop us from starting on Obs territory
-    // {
-    //   this.samplesCollected.push(currentTerrain)
-    // }
-    //this.executeCommand("S")
-
-
-    // we don't need this, I'm leaving this in to show what was done but if the command 'S' is not given then the bot won't varvest
-    // for some reason I had thought it must harvest on the first go. but really the count of harvested materials should
-    // match the number of S's in the input
-
-  }
-
   private dropRandomSand(): void {
-    if (Math.random() < this.sandDropProbability) {
+    this.moveCount++
+
+    // Use seeded random for deterministic behavior
+    if (this.seededRandom.next() < this.sandDropProbability) {
       const availablePositions: Position[] = []
 
       // Find all non-obstacle positions
@@ -292,10 +350,10 @@ export class MarsRobot {
       }
 
       if (availablePositions.length > 0) {
-        const randomIndex = Math.floor(Math.random() * availablePositions.length)
+        const randomIndex = Math.floor(this.seededRandom.next() * availablePositions.length)
         const sandPosition = availablePositions[randomIndex]
         this.terrain[sandPosition.y][sandPosition.x] = "Sa"
-        this.simulationLog.push(`Sand dropped at (${sandPosition.x}, ${sandPosition.y})`)
+        this.simulationLog.push(`Sand dropped at (${sandPosition.x}, ${sandPosition.y}) after move ${this.moveCount}`)
       }
     }
   }
@@ -349,23 +407,8 @@ export class MarsRobot {
   }
 }
 
-
 export function simulateRobot(input: RobotInput): RobotOutput {
-  console.log("Loaded robot-simulator.ts")
-  // Validate input and keep application clean from bad inputs, will but other considerations here after testing
-  /** 
-   * Validations done
-   * non empty arrays - no work given to be done
-   * non square terrain map - this can be removed really as the logic works ubt can create weird Obs states
-   * battery check - must be positive and must be a number e.g. 'thirty' does not count
-   * command array - must be an array
-   * command array II - must be a valid command so we don't let rubbish in here
-   * initial position - if not given will be error no assumptions on inital position made in case we assume it on top of an OBs
-   * initial position Obs - make sure initial pos not an Obs
-   * direction - make sure we have valid directions
-   * missed- terrain checking
-   * */
-
+  // Validate input
   if (!input.terrain || !Array.isArray(input.terrain) || input.terrain.length === 0) {
     throw new Error("Invalid terrain: must be a non-empty 2D array")
   }
@@ -373,28 +416,13 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   if (!input.terrain.every((row) => Array.isArray(row) && row.length === input.terrain[0].length)) {
     throw new Error("Invalid terrain: all rows must have the same length")
   }
-  console.log("Terrain matrix:", JSON.stringify(input.terrain));
-
-  const validTerrains: TerrainType[] = ["Fe" , "Se" , "W" , "Si" , "Zn" , "Obs", "Sa"];
-  //validate terrain types
-  function isValidTerrain(t:string): t is TerrainType{
-    const valid = validTerrains.includes(t as TerrainType)
-    if (!valid){
-      console.warn(`Invalid terrain found: '${t}'`);
-    }
-    return valid;
-  }
-  const allValid = input.terrain.every(row => row.every(cell => isValidTerrain(cell)));
-  if(!allValid){
-    throw new Error("Invalid terrain types supplied, please double check what types were given. Allowed terrain types: Fe , Se , W , Si , Zn , Obs, Sa")
-  }
 
   if (typeof input.battery !== "number" || input.battery < 0) {
     throw new Error("Invalid battery: must be a non-negative number")
   }
 
   if (!Array.isArray(input.commands)) {
-    throw new Error("Invalid commands input: must be an array")
+    throw new Error("Invalid commands: must be an array")
   }
 
   const validCommands = ["F", "B", "L", "R", "S", "E"]
@@ -403,7 +431,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   }
 
   if (!input.initialPosition || !input.initialPosition.location) {
-    throw new Error("Invalid or empty initial position supplied")
+    throw new Error("Invalid initial position")
   }
 
   const { x, y } = input.initialPosition.location
@@ -420,6 +448,20 @@ export function simulateRobot(input: RobotInput): RobotOutput {
     throw new Error("Invalid facing direction: must be North, East, South, or West")
   }
 
+  // Add timeout protection for large simulations
+  const startTime = Date.now()
+  const TIMEOUT_MS = 30000 // 30 seconds timeout
+
   const robot = new MarsRobot(input)
+
+  // Check for timeout during simulation
+  const originalExecuteCommand = robot["executeCommand"].bind(robot)
+  robot["executeCommand"] = (command: Command) => {
+    if (Date.now() - startTime > TIMEOUT_MS) {
+      throw new Error("Simulation timeout: execution took too long")
+    }
+    return originalExecuteCommand(command)
+  }
+
   return robot.simulate(input.commands as Command[])
 }
