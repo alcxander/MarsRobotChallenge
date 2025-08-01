@@ -241,6 +241,8 @@ The extensions on the requirement were pretty comprehensive already. Some things
 - a slightly updated UI on the web app to create random files for input. 
 - refactoring the scripts just a little bit more to make better test coverage and get over the current 65%
 - a second bot that races you turn for turn with randomly applied mission objectives to each controller
+- random map changes like a dynamic obstacle change after a sampling
+- adding weights to terrain scores so I could make other terrain options like sand or loose gravel
 
 ## Working with AI on this Project
 
