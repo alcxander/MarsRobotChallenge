@@ -26,7 +26,7 @@ export interface RobotOutput {
 }
 
 export type Direction = "North" | "East" | "South" | "West"
-export type TerrainType = "Fe" | "Se" | "W" | "Si" | "Zn" | "Obs"
+export type TerrainType = "Fe" | "Se" | "W" | "Si" | "Zn" | "Obs" | "Sa"
 export type Command = "F" | "B" | "L" | "R" | "S" | "E"
 
 export class MarsRobot {
@@ -45,6 +45,9 @@ export class MarsRobot {
     ["E", "F", "F"],
     ["E", "F", "L", "F", "L", "F"],
   ]
+
+  private readonly sandDropProbability = 0.15 // 15% chance after each move
+  private simulationLog: string[] = []
 
   constructor(input: RobotInput) {
     this.position = { ...input.initialPosition.location }
@@ -89,7 +92,8 @@ export class MarsRobot {
       pos.x < this.terrain[0].length &&
       pos.y >= 0 &&
       pos.y < this.terrain.length &&
-      this.terrain[pos.y][pos.x] !== "Obs"
+      this.terrain[pos.y][pos.x] !== "Obs" &&
+      this.terrain[pos.y][pos.x] !== "Sa"      
     )
   }
 
@@ -118,6 +122,8 @@ export class MarsRobot {
         if (this.isValidPosition(nextPosF)) {
           this.position = nextPosF
           this.addVisitedCell(this.position)
+          this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+          this.dropRandomSand()
           return true
         } else {
           return this.executeBackoffStrategy()
@@ -129,6 +135,8 @@ export class MarsRobot {
         if (this.isValidPosition(nextPosB)) {
           this.position = nextPosB
           this.addVisitedCell(this.position)
+          this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+          this.dropRandomSand()
           return true
         } else {
           return this.executeBackoffStrategy()
@@ -137,24 +145,30 @@ export class MarsRobot {
       case "L":
         if (!this.consumeBattery(2)) return false
         this.turnLeft()
+        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
         return true
 
       case "R":
         if (!this.consumeBattery(2)) return false
         this.turnRight()
+        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
         return true
 
       case "S":
         if (!this.consumeBattery(8)) return false
+        // explicit collect only
         const currentTerrain = this.terrain[this.position.y][this.position.x]
         if (currentTerrain !== "Obs") {
           this.samplesCollected.push(currentTerrain)
+          this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
         }
         return true
 
       case "E":
         if (!this.consumeBattery(1)) return false
         this.battery += 10
+        this.simulationLog.push(`Moved forward to (${this.position.x}, ${this.position.y})`)
+        this.dropRandomSand()
         return true
 
       default:
@@ -263,7 +277,78 @@ export class MarsRobot {
     // match the number of S's in the input
 
   }
+
+  private dropRandomSand(): void {
+    if (Math.random() < this.sandDropProbability) {
+      const availablePositions: Position[] = []
+
+      // Find all non-obstacle positions
+      for (let y = 0; y < this.terrain.length; y++) {
+        for (let x = 0; x < this.terrain[0].length; x++) {
+          if (this.terrain[y][x] !== "Obs" && this.terrain[y][x] !== "Sa") {
+            availablePositions.push({ x, y })
+          }
+        }
+      }
+
+      if (availablePositions.length > 0) {
+        const randomIndex = Math.floor(Math.random() * availablePositions.length)
+        const sandPosition = availablePositions[randomIndex]
+        this.terrain[sandPosition.y][sandPosition.x] = "Sa"
+        this.simulationLog.push(`Sand dropped at (${sandPosition.x}, ${sandPosition.y})`)
+      }
+    }
+  }
+
+  public getSimulationLog(): string[] {
+    return [...this.simulationLog]
+  }
+
+  public getCurrentTerrain(): string[][] {
+    return this.terrain.map((row) => [...row])
+  }
+
+  public getStepState() {
+    return {
+      position: { ...this.position },
+      facing: this.facing,
+      battery: this.battery,
+      terrain: this.terrain.map((row) => [...row]),
+      visitedCells: this.visitedCells.map((cell) => ({ ...cell })),
+      samplesCollected: [...this.samplesCollected],
+      log: [...this.simulationLog],
+    }
+  }
+
+  public restoreState(state: any) {
+    this.position = { ...state.position }
+    this.facing = state.facing
+    this.battery = state.battery
+    this.terrain = state.terrain.map((row: string[]) => [...row])
+    this.visitedCells = state.visitedCells.map((cell: Position) => ({ ...cell }))
+    this.samplesCollected = [...state.samplesCollected]
+    this.simulationLog = [...state.log]
+  }
+
+  public executeStep(command: Command): boolean {
+    const requiredBattery = this.getRequiredBattery(command)
+
+    // If we don't have enough battery but can extend solar panels, do it automatically
+    if (this.battery < requiredBattery && this.battery >= 1) {
+      this.simulationLog.push("Auto-extending solar panels due to low battery")
+      this.executeCommand("E")
+    }
+
+    // Try to execute the command
+    const success = this.executeCommand(command)
+    if (!success) {
+      this.simulationLog.push(`Failed to execute command: ${command}`)
+    }
+
+    return success
+  }
 }
+
 
 export function simulateRobot(input: RobotInput): RobotOutput {
   console.log("Loaded robot-simulator.ts")
@@ -290,7 +375,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   }
   console.log("Terrain matrix:", JSON.stringify(input.terrain));
 
-  const validTerrains: TerrainType[] = ["Fe" , "Se" , "W" , "Si" , "Zn" , "Obs"];
+  const validTerrains: TerrainType[] = ["Fe" , "Se" , "W" , "Si" , "Zn" , "Obs", "Sa"];
   //validate terrain types
   function isValidTerrain(t:string): t is TerrainType{
     const valid = validTerrains.includes(t as TerrainType)
@@ -301,7 +386,7 @@ export function simulateRobot(input: RobotInput): RobotOutput {
   }
   const allValid = input.terrain.every(row => row.every(cell => isValidTerrain(cell)));
   if(!allValid){
-    throw new Error("Invalid terrain types supplied, please double check what types were given. Allowed terrain types: Fe , Se , W , Si , Zn , Obs.")
+    throw new Error("Invalid terrain types supplied, please double check what types were given. Allowed terrain types: Fe , Se , W , Si , Zn , Obs, Sa")
   }
 
   if (typeof input.battery !== "number" || input.battery < 0) {
