@@ -94,7 +94,7 @@ async function main() {
     const parts = normalized.split(/\s+/);
     
     if (parts.length !== 6) {
-      console.log("hellloooooooooo", normalized)
+      //console.log("hellloooooooooo", normalized)
       console.log(chalk.yellow("⚠️ Usage: plan path <startX> <startY> <goalX> <goalY>"));
       continue;
     }
